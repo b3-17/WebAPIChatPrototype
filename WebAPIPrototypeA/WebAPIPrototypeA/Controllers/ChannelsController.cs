@@ -13,15 +13,21 @@ namespace WebAPIPrototypeA.Controllers
 		}
 
 		[HttpGet]
-		public IEnumerable<Channel> GetAllChannels()
+		public IHttpActionResult GetAllChannels()
 		{
-			return Channels;
+			return Ok(this.Channels);
+		}
+
+		[HttpGet]
+		public IHttpActionResult GetChannel(string channelName)
+		{
+			return Ok(this.Channels.Where(x => x.ChannelName == channelName));
 		}
 
 		[HttpPost]
 		public IHttpActionResult Save([FromBody]Channel channel)
 		{
-			if(this.IsValidChannel(channel))
+			if (this.IsValidChannel(channel))
 			{
 				this.Channels.Add(channel);
 				return Ok();
@@ -34,7 +40,7 @@ namespace WebAPIPrototypeA.Controllers
 		{
 			bool isValidNewChannel = false;
 			if (channel.Subscribers != null)
-			{ 
+			{
 				isValidNewChannel = this.Channels.Count(x => x.ChannelName == channel.ChannelName) == 0 && channel.Subscribers.Count() > 0;
 			}
 

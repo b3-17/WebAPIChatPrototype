@@ -17,7 +17,7 @@ namespace WebAPIPrototypeA.Tests
 		[SetUp]
 		public void SetUp()
 		{
-
+			this.channelController = new ChannelsController();
 		}
 
 		[TearDown]
@@ -29,7 +29,6 @@ namespace WebAPIPrototypeA.Tests
 		[Test()]
 		public void SaveChannel()
 		{
-			this.channelController = new ChannelsController();
 			Channel channel = new Channel { ChannelName = "test channel", Subscribers = new List<ChatUser> { new ChatUser { UserName = "new user" } } };
 			Assert.AreEqual(0, channelController.Channels.Count(), "the channel list should be empty on start up");
 
@@ -43,7 +42,6 @@ namespace WebAPIPrototypeA.Tests
 		[Test()]
 		public void SaveChannelNoInitialSubscriber()
 		{
-			this.channelController = new ChannelsController();
 			Channel channel = new Channel { ChannelName = "test channel", Subscribers = null };
 			Assert.AreEqual(0, channelController.Channels.Count(), "the channel list should be empty on start up");
 
@@ -61,7 +59,6 @@ namespace WebAPIPrototypeA.Tests
 		[Test()]
 		public void CreateChannelAlreadyExists()
 		{
-			this.channelController = new ChannelsController();
 			Channel existingChannel = new Channel { ChannelName = "existing test channel" };
 			this.channelController.Channels.Add(existingChannel);
 			Assert.AreEqual(1, this.channelController.Channels.Count(), "the channel list should be primed to test dupes");
@@ -72,31 +69,37 @@ namespace WebAPIPrototypeA.Tests
 			Assert.AreEqual(HttpStatusCode.NotModified, result.StatusCode, "the result was incorrect");
 		}
 
-		/*[Test()]
+		[Test()]
 		public void GetAllAvailableChannels()
 		{
-			IChatService service = new ChatService(this.basicWebContext.Object);
-			this.SetUpFakeChannels(service);
+			this.channelController.Channels = this.GetFakeChannels();
+			OkNegotiatedContentResult<List<Channel>> channels = this.channelController.GetAllChannels() as OkNegotiatedContentResult<List<Channel>>;
 
-			var channels = service.GetAllChannels();
-			Assert.AreEqual(@"[{""ChannelName"":""test channel 1"",""Subscribers"":[]},{""ChannelName"":""test channel 2"",""Subscribers"":[]}]",
-							channels.ToString(), "the channels were not returned properly");
-			Assert.AreEqual(System.Net.HttpStatusCode.OK, this.statusCode, "the response status was not correct");
+			Assert.AreEqual(this.channelController.Channels.Count(), channels.Content.Count(), "the returned channels were not correct");
 		}
 
 		[Test()]
 		public void GetChannelByName()
 		{
-			IChatService service = new ChatService(this.basicWebContext.Object);
-			this.SetUpFakeChannels(service);
-			(service as ChatService).Channels.Add(new Channel { ChannelName = "test channel 3" });
+			this.channelController.Channels = this.GetFakeChannels();
+			this.channelController.Channels.Add(new Channel { ChannelName = "test channel 3" });
+			OkNegotiatedContentResult<IEnumerable<Channel>> channels = this.channelController.GetChannel("test channel 2") as OkNegotiatedContentResult<IEnumerable<Channel>>;
 
-			var channels = service.GetChannelByName("test channel 2");
-			Assert.AreEqual(@"[{""ChannelName"":""test channel 2"",""Subscribers"":[]}]", channels.ToString(), "the channels were not returned properly");
-			Assert.AreEqual(System.Net.HttpStatusCode.OK, this.statusCode, "the response status was not correct");
+			Assert.AreEqual(1, channels.Content.Count(), "only one channel should be returned by the query");
+			Assert.AreEqual("test channel 2", channels.Content.FirstOrDefault().ChannelName, "the channels were not returned properly");
 		}
 
 		[Test()]
+		public void GetChannelByNameDoesntExist()
+		{
+			this.channelController.Channels = this.GetFakeChannels();
+			Assert.AreEqual(0, this.channelController.Channels.Count(x => x.ChannelName == "non-existing channel"), "make sure test is properly primed");
+
+			OkNegotiatedContentResult<IEnumerable<Channel>> channels = this.channelController.GetChannel("non-existing channel") as OkNegotiatedContentResult<IEnumerable<Channel>>;
+			Assert.AreEqual(0, channels.Content.Count(), "no channels should be returned by the query");
+		}
+
+		/*[Test()]
 		public void SubscribeUserToExistentChannel()
 		{
 			IChatService service = new ChatService(this.basicWebContext.Object);
@@ -165,12 +168,15 @@ namespace WebAPIPrototypeA.Tests
 			service.UnsubscribeUserFromChannel(new Channel { ChannelName = "test channel 1" }, new ChatUser { UserName = "test user 1" });
 			Assert.AreEqual(2, (service as ChatService).Channels.Count(), "make sure we don't create any new channels");
 			Assert.AreEqual(System.Net.HttpStatusCode.OK, this.statusCode, "the response status was not correct");
-		}
-
-		private void SetUpFakeChannels(IChatService service)
-		{
-			(service as ChatService).Channels.Add(new Channel { ChannelName = "test channel 1" });
-			(service as ChatService).Channels.Add(new Channel { ChannelName = "test channel 2" });
 		}*/
+
+		private List<Channel> GetFakeChannels()
+		{
+			List<Channel> fakeChannels = new List<Channel>();
+			fakeChannels.Add(new Channel { ChannelName = "test channel 1" });
+			fakeChannels.Add(new Channel { ChannelName = "test channel 2" });
+
+			return fakeChannels;
+		}
 	}
 }
