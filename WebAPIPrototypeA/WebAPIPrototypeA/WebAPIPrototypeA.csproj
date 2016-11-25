@@ -84,6 +84,7 @@
     <Folder Include="Models\" />
     <Folder Include="Scripts\" />
     <Folder Include="Views\Channels\" />
+    <Folder Include="Views\ChatTest\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Global.asax.cs">
@@ -94,6 +95,7 @@
     <Compile Include="Controllers\ChannelsController.cs" />
     <Compile Include="Models\Channel.cs" />
     <Compile Include="Models\ChatUser.cs" />
+    <Compile Include="Controllers\ChatTestController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Web.config" />
@@ -104,6 +106,7 @@
     <Content Include="Global.asax" />
     <Content Include="packages.config" />
     <Content Include="Views\Channels\Index.cshtml" />
+    <Content Include="Views\ChatTest\Index.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

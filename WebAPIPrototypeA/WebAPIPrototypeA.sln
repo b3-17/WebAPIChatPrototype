@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPIPrototypeA", "WebAPIP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPIPrototypeA.Tests", "WebAPIPrototypeA.Tests\WebAPIPrototypeA.Tests.csproj", "{6AA76686-1EF8-4013-A509-3FF210D17352}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRunner", "TestRunner\TestRunner.csproj", "{39716D2C-7616-4D2B-B3BA-98BAB7EAB405}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,5 +21,9 @@ Global
 		{6AA76686-1EF8-4013-A509-3FF210D17352}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6AA76686-1EF8-4013-A509-3FF210D17352}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6AA76686-1EF8-4013-A509-3FF210D17352}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39716D2C-7616-4D2B-B3BA-98BAB7EAB405}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39716D2C-7616-4D2B-B3BA-98BAB7EAB405}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39716D2C-7616-4D2B-B3BA-98BAB7EAB405}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39716D2C-7616-4D2B-B3BA-98BAB7EAB405}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,58 @@
+﻿<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript" >
+ var targetUrl;
+
+function getData(url) {
+    targetUrl = url;
+};
+
+getData.prototype.getForJsonResponse = function (callback) {
+    var request = new XMLHttpRequest();
+    request.open("GET", targetUrl, true);
+    request.onreadystatechange = function () {
+        if (request.readyState != 4 || request.status != 200)
+            return;
+        callback(request.responseText);
+    };
+    request.send();
+}
+
+getData.prototype.postForJsonResponse = function (data, callback) {
+    var request = new XMLHttpRequest();
+    request.open("POST", targetUrl, true);
+    request.setRequestHeader("Accept", "application/json");
+    request.setRequestHeader("Content-type", "application/json");
+    request.setRequestHeader("Content-length", data.length);
+    request.setRequestHeader("Connection", "close");
+    request.onreadystatechange = function () {
+        if (request.readyState != 4 || request.status != 200)
+            return;
+        callback(request.responseText);
+    };
+    request.send(data);
+}
+	
+	; spikeRunner = {
+		showPostTest: function(data){
+			console.log(data);
+			
+		},
+}
+
+$(document).ready(function(){
+	
+	$('#buttony').click(function(){
+		var get = new getData('/api/channels/subscribe');
+		var channel = {ChannelName: 'hello', Subscribers:[{ UserName: 'user'}]};
+		get.postForJsonResponse(JSON.stringify(channel), spikeRunner.showPostTest);
+		//var get = new getData('http://127.0.0.1:8080/api/channels/test');
+		//get.getForJsonResponse(spikeRunner.showPostTest);
+	});
+	
+});
+</script>
+
+<form method="post" action="/api/products">
+	<input type="button" id="buttony" value="hi" />
+</form>
+
