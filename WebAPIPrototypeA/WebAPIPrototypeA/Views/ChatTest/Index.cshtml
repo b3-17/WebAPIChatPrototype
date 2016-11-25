@@ -42,11 +42,11 @@ getData.prototype.postForJsonResponse = function (data, callback) {
 $(document).ready(function(){
 	
 	$('#buttony').click(function(){
-		//var get = new getData('/api/channels');
-		//var channel = {ChannelName: 'hello', Subscribers:[{ UserName: 'user'}]};
-		//get.postForJsonResponse(JSON.stringify(channel), spikeRunner.showPostTest);
-		var get = new getData('http://127.0.0.1:8080/api/channels/test');
-		get.getForJsonResponse(spikeRunner.showPostTest);
+		var get = new getData('/api/channels/subscribe');
+		var channel = {ChannelName: 'hello', Subscribers:[{ UserName: 'user'}]};
+		get.postForJsonResponse(JSON.stringify(channel), spikeRunner.showPostTest);
+		//var get = new getData('http://127.0.0.1:8080/api/channels/test');
+		//get.getForJsonResponse(spikeRunner.showPostTest);
 	});
 	
 });

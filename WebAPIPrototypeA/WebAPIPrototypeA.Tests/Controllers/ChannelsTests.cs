@@ -99,76 +99,81 @@ namespace WebAPIPrototypeA.Tests
 			Assert.AreEqual(0, channels.Content.Count(), "no channels should be returned by the query");
 		}
 
-		/*[Test()]
+		[Test()]
 		public void SubscribeUserToExistentChannel()
 		{
-			IChatService service = new ChatService(this.basicWebContext.Object);
-			this.SetUpFakeChannels(service);
-			service.SubscribeUserToChannel(new Channel { ChannelName = "test channel 2" }, new ChatUser { UserName = "test user 1" });
-			Assert.AreEqual(1, (service as ChatService).Channels.FirstOrDefault(x => x.ChannelName == "test channel 2").Subscribers.Count(), "the channel was not properly subscribed to");
-			Assert.AreEqual("test user 1", (service as ChatService).Channels.FirstOrDefault(x => x.ChannelName == "test channel 2")
+			this.channelController.Channels = this.GetFakeChannels();
+			Channel subscribeToChannel = new Channel { ChannelName = "test channel 2", Subscribers = new List<ChatUser> { new ChatUser { UserName = "test user 1" } } };
+
+			OkResult result = this.channelController.Subscribe(subscribeToChannel) as OkResult;
+			Assert.AreEqual(1, this.channelController.Channels.FirstOrDefault(x => x.ChannelName == "test channel 2").Subscribers.Count(), "the channel was not properly subscribed to");
+			Assert.AreEqual("test user 1", this.channelController.Channels.FirstOrDefault(x => x.ChannelName == "test channel 2")
 							.Subscribers.FirstOrDefault().UserName, "the user name was incorrect");
-			Assert.AreEqual(System.Net.HttpStatusCode.OK, this.statusCode, "the response status was not correct");
+			Assert.IsNotNull(result, "the response status was not correct");
 		}
 
 		[Test()]
 		public void SubscribeUserToExistentChannelAlreadySubscribed()
 		{
-			IChatService service = new ChatService(this.basicWebContext.Object);
-			this.SetUpFakeChannels(service);
-			(service as ChatService).Channels.FirstOrDefault(x => x.ChannelName == "test channel 2").Subscribers.Add(new ChatUser { UserName = "test user 1" });
-			service.SubscribeUserToChannel(new Channel { ChannelName = "test channel 2" }, new ChatUser { UserName = "test user 1" });
-			Assert.AreEqual(1, (service as ChatService).Channels.FirstOrDefault(x => x.ChannelName == "test channel 2").Subscribers.Count(), "the channel was not properly subscribed to");
-			Assert.AreEqual(System.Net.HttpStatusCode.Conflict, this.statusCode, "the response status was not correct");
+			this.channelController.Channels = this.GetFakeChannels();
+			this.channelController.Channels.FirstOrDefault(x => x.ChannelName == "test channel 2").Subscribers = new List<ChatUser>();
+			this.channelController.Channels.FirstOrDefault(x => x.ChannelName == "test channel 2").Subscribers.Add(new ChatUser { UserName = "test user 1" });
+			ConflictResult result = this.channelController.Subscribe(
+				new Channel { ChannelName = "test channel 2", Subscribers = new List<ChatUser> { new ChatUser { UserName = "test user 1" } } }) as ConflictResult;
+			Assert.AreEqual(1, this.channelController.Channels.FirstOrDefault(x => x.ChannelName == "test channel 2").Subscribers.Count(), "the channel was not properly subscribed to");
+			Assert.IsNotNull(result, "the response status was not correct");
 		}
 
 		[Test()]
 		public void SubscribeUserToNonExistentChannel()
 		{
-			IChatService service = new ChatService(this.basicWebContext.Object);
-			Assert.AreEqual(0, (service as ChatService).Channels.Count(), "make sure we have no channels currently");
+			Assert.AreEqual(0, this.channelController.Channels.Count(), "make sure we have no channels currently");
 
-			service.SubscribeUserToChannel(new Channel { ChannelName = "test channel 2" }, new ChatUser { UserName = "test user 1" });
-			Assert.AreEqual(1, (service as ChatService).Channels.FirstOrDefault(x => x.ChannelName == "test channel 2").Subscribers.Count(), "the channel was not created by default");
-			Assert.AreEqual(System.Net.HttpStatusCode.OK, this.statusCode, "the response status was not correct");
+			OkResult result = this.channelController.Subscribe(new Channel { ChannelName = "test channel 2",
+				Subscribers = new List<ChatUser> { new ChatUser { UserName = "test user 1" } } }) as OkResult;
+			Assert.AreEqual(1, this.channelController.Channels.FirstOrDefault(x => x.ChannelName == "test channel 2").Subscribers.Count(), "the channel was not created by default");
+			Assert.IsNotNull(result, "the response status was not correct");
 		}
 
 		[Test()]
 		public void UnsubscribeUserFromExistentChannel()
 		{
-			IChatService service = new ChatService(this.basicWebContext.Object);
-			this.SetUpFakeChannels(service);
-			(service as ChatService).Channels.FirstOrDefault(x => x.ChannelName == "test channel 1").Subscribers.Add(new ChatUser { UserName = "test user 1" });
-			(service as ChatService).Channels.FirstOrDefault(x => x.ChannelName == "test channel 2").Subscribers.Add(new ChatUser { UserName = "test user 1" });
+			this.channelController.Channels = this.GetFakeChannels();
+			this.channelController.Channels.ForEach(x => x.Subscribers = new List<ChatUser>());
 
-			service.UnsubscribeUserFromChannel(new Channel { ChannelName = "test channel 1" }, new ChatUser { UserName = "test user 1" });
-			Assert.AreEqual(0, (service as ChatService).Channels.FirstOrDefault(x => x.ChannelName == "test channel 1").Subscribers.Count(), "the user was not unsubscribed");
-			Assert.AreEqual(1, (service as ChatService).Channels.FirstOrDefault(x => x.ChannelName == "test channel 2").Subscribers.Count(), "the user was unsubscribed from the wrong channel!");
+			this.channelController.Channels.FirstOrDefault(x => x.ChannelName == "test channel 1").Subscribers.Add(new ChatUser { UserName = "test user 1" });
+			this.channelController.Channels.FirstOrDefault(x => x.ChannelName == "test channel 2").Subscribers.Add(new ChatUser { UserName = "test user 1" });
 
-			Assert.AreEqual(System.Net.HttpStatusCode.OK, this.statusCode, "the response status was not correct");
+			OkResult result = this.channelController.Unsubscribe(
+				new Channel { ChannelName = "test channel 1", Subscribers = new List<ChatUser> { new ChatUser { UserName = "test user 1" } } }) as OkResult;
+			Assert.AreEqual(0, this.channelController.Channels.FirstOrDefault(x => x.ChannelName == "test channel 1").Subscribers.Count(), "the user was not unsubscribed");
+			Assert.AreEqual(1, this.channelController.Channels.FirstOrDefault(x => x.ChannelName == "test channel 2").Subscribers.Count(), "the user was unsubscribed from the wrong channel!");
+
+			Assert.IsNotNull(result, "the response status was not correct");
 		}
 
 		[Test()]
 		public void UnsubscribeUserFromNonExistentChannel()
 		{
-			IChatService service = new ChatService(this.basicWebContext.Object);
-			Assert.AreEqual(0, (service as ChatService).Channels.Count(), "make sure we have no channels currently");
+			Assert.AreEqual(0, this.channelController.Channels.Count(), "make sure we have no channels currently");
 
-			service.UnsubscribeUserFromChannel(new Channel { ChannelName = "test channel 1" }, new ChatUser { UserName = "test user 1" });
-			Assert.AreEqual(0, (service as ChatService).Channels.Count(), "make sure we don't create any new channels");
-			Assert.AreEqual(System.Net.HttpStatusCode.OK, this.statusCode, "the response status was not correct");
+			OkResult result = this.channelController.Unsubscribe(
+				new Channel { ChannelName = "test channel 1", Subscribers = new List<ChatUser> { new ChatUser { UserName = "test user 1" } } }) as OkResult;
+			Assert.AreEqual(0, this.channelController.Channels.Count(), "make sure we don't create any new channels");
+			Assert.IsNotNull(result, "the response status was not correct");
 		}
 
 		[Test()]
 		public void UnsubscribeUserNotSubscribedFromExistentChannel()
 		{
-			IChatService service = new ChatService(this.basicWebContext.Object);
-			this.SetUpFakeChannels(service);
+			this.channelController.Channels = this.GetFakeChannels();
+			this.channelController.Channels.ForEach(x => x.Subscribers = new List<ChatUser>());
 
-			service.UnsubscribeUserFromChannel(new Channel { ChannelName = "test channel 1" }, new ChatUser { UserName = "test user 1" });
-			Assert.AreEqual(2, (service as ChatService).Channels.Count(), "make sure we don't create any new channels");
-			Assert.AreEqual(System.Net.HttpStatusCode.OK, this.statusCode, "the response status was not correct");
-		}*/
+			OkResult result = this.channelController.Unsubscribe(
+				new Channel { ChannelName = "test channel 1", Subscribers = new List<ChatUser> { new ChatUser { UserName = "test user 1" } } }) as OkResult;
+			Assert.AreEqual(2, this.channelController.Channels.Count(), "make sure we don't create any new channels");
+			Assert.IsNotNull(result, "the response status was not correct");
+		}
 
 		private List<Channel> GetFakeChannels()
 		{
