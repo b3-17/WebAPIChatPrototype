@@ -85,6 +85,7 @@
     <Folder Include="Scripts\" />
     <Folder Include="Views\Channels\" />
     <Folder Include="Views\ChatTest\" />
+    <Folder Include="App_Code\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Global.asax.cs">
@@ -93,9 +94,8 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ChannelsController.cs" />
-    <Compile Include="Models\Channel.cs" />
-    <Compile Include="Models\ChatUser.cs" />
     <Compile Include="Controllers\ChatTestController.cs" />
+    <Compile Include="App_Code\SessionableControllerHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Web.config" />
@@ -107,6 +107,16 @@
     <Content Include="packages.config" />
     <Content Include="Views\Channels\Index.cshtml" />
     <Content Include="Views\ChatTest\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Models\Models.csproj">
+      <Project>{E8D08EB8-9E29-499B-BC8C-1C0B85E826CC}</Project>
+      <Name>Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Repository\Repository.csproj">
+      <Project>{5709854E-3185-46C4-97A9-BE2CE3DEE21F}</Project>
+      <Name>Repository</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

@@ -1,5 +1,5 @@
 ﻿using System;
-namespace WebAPIPrototypeA
+namespace Models
 {
 	public class ChatUser
 	{

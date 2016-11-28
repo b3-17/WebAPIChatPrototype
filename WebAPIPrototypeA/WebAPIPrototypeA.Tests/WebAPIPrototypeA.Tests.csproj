@@ -74,18 +74,40 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.5.28\lib\net45\Moq.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WebAPIPrototypeA\WebAPIPrototypeA.csproj">
       <Project>{323EB8A3-9192-4373-813A-D5CB61F85F79}</Project>
       <Name>WebAPIPrototypeA</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Repository\Repository.csproj">
+      <Project>{5709854E-3185-46C4-97A9-BE2CE3DEE21F}</Project>
+      <Name>Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Models\Models.csproj">
+      <Project>{E8D08EB8-9E29-499B-BC8C-1C0B85E826CC}</Project>
+      <Name>Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\ChannelsTests.cs" />
+    <Compile Include="Mocks\HttpMock.cs" />
+    <Compile Include="Repository\ChannelRepositoryTests.cs" />
+    <Compile Include="Controllers\ControllerTestBase.cs" />
+    <Compile Include="Repository\RepositoryTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Mocks\" />
+    <Folder Include="Repository\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
