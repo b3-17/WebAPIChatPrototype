@@ -101,6 +101,7 @@
     <Compile Include="Repository\ChannelRepositoryTests.cs" />
     <Compile Include="Controllers\ControllerTestBase.cs" />
     <Compile Include="Repository\RepositoryTestBase.cs" />
+    <Compile Include="Repository\UserRepositoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
