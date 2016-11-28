@@ -7,5 +7,6 @@ namespace Repository
 	public interface IContext
 	{
 		IEnumerable<Channel> Channels { get; set; }
+		IEnumerable<ChatUser> ChatUsers { get; set;}
 	}
 }

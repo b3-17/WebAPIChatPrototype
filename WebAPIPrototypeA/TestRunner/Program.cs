@@ -8,10 +8,12 @@ namespace TestRunner
 		public static void Main(string[] args)
 		{
 			//ChannelRepositoryTests tests = new ChannelRepositoryTests();
-			ChannelsTests tests = new ChannelsTests();
+			//ChannelsTests tests = new ChannelsTests();
+			//ChatUserRepositoryTests tests = new ChatUserRepositoryTests();
+			ChatUserControllerTests tests = new ChatUserControllerTests();
 			tests.SetUp();
 
-			tests.CreateChannelAlreadyExists();
+			tests.GetChatUserByName();
 
 			tests.CleanUp();
 		}
