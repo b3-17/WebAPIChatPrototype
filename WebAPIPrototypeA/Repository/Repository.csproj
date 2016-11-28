@@ -29,6 +29,7 @@
     <Compile Include="ChannelRepository.cs" />
     <Compile Include="SessionStateContext.cs" />
     <Compile Include="IContext.cs" />
+    <Compile Include="ChatUserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Models\Models.csproj">
