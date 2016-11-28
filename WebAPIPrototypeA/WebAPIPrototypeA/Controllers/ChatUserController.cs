@@ -23,6 +23,18 @@ namespace WebAPIPrototypeA.Controllers
 
 		}
 
+		[HttpGet]
+		public IHttpActionResult GetAllChatUsers()
+		{
+			return Ok(this.chatUserRepo.All());
+		}
+
+		[HttpGet]
+		public IHttpActionResult GetChatUser(string chatUserName)
+		{
+			return Ok(this.chatUserRepo.All().Where(x => x.UserName == chatUserName));
+		}
+
 		[HttpPost]
 		public IHttpActionResult Save([FromBody]ChatUser chatUser)
 		{

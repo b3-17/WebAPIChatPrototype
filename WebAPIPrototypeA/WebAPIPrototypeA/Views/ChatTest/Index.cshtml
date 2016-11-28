@@ -33,41 +33,83 @@ getData.prototype.postForJsonResponse = function (data, callback) {
 }
 	
 	; spikeRunner = {
-		showPostTest: function(data){
-			document.getElementById('results').innerHTML = JSON.stringify(data);
-			
+		updateChannelList: function(){
+		var get = new getData('http://127.0.0.1:8080/api/channels');
+		get.getForJsonResponse(setChannelDropdown);
+			function setChannelDropdown(data){	
+	console.log(data);
+			var parsedData = JSON.parse(data);
+			var select = document.getElementById('channels');
+			for( var i = 0; i < parsedData.length; i++){
+				var option = document.createElement('option');
+				option.value = parsedData[i].ChannelName;
+				option.innerHTML = parsedData[i].ChannelName;
+				select.appendChild(option);
+			}
+			}
 		},
+	
+	getSelectedFromDropDown: function(listId){
+		var dropdown = document.getElementById(listId);
+		return dropdown[dropdown.selectedIndex].innerHTML;
+	},
+
+	updateUserList :function(){
+		var get = new getData('http://127.0.0.1:8080/api/chatuser');
+		get.getForJsonResponse(setUserDropdown);
+		function setUserDropdown(data){
+			var parsedData = JSON.parse(data);
+	console.log(data);
+			var select = document.getElementById('users');
+			for( var i = 0; i < parsedData.length; i++){
+				var option = document.createElement('option');
+				option.value = parsedData[i].UserToken;
+				option.innerHTML = parsedData[i].UserName;
+				select.appendChild(option);
+			}
+		}
+	}
 }
 
 $(document).ready(function(){
+	spikeRunner.updateChannelList();
+	spikeRunner.updateUserList();
 	$('#newChannel').click(function(){
 		var get = new getData('http://127.0.0.1:8080/api/createchannel');
-		var channel = {ChannelName: document.getElementById('newChannelName').value, Subscribers:[{ UserName: 'user'}]};
-		get.postForJsonResponse(JSON.stringify(channel), spikeRunner.showPostTest);
+		var channel = {ChannelName: document.getElementById('newChannelName').value, Subscribers:[{ UserName: spikeRunner.getSelectedFromDropDown('users') }]};
+		get.postForJsonResponse(JSON.stringify(channel), spikeRunner.updateChannelList);
 	});
 	
 	$('#subscribe').click(function(){
 		var get = new getData('http://127.0.0.1:8080/api/channels/subscribe');
-		var channel = {ChannelName: 'hello', Subscribers:[{ UserName: 'user'}]};
-		get.postForJsonResponse(JSON.stringify(channel), spikeRunner.showPostTest);
+		var channel = {ChannelName: spikeRunner.getSelectedFromDropDown('channels'), Subscribers:[{ UserName: spikeRunner.getSelectedFromDropDown('users')}]};
+		get.postForJsonResponse(JSON.stringify(channel), spikeRunner.updateChannelList);
 	});
 
 	$('#unsubscribe').click(function(){
 		var get = new getData('http://127.0.0.1:8080/api/channels/unsubscribe');
-		var channel = {ChannelName: 'hello', Subscribers:[{ UserName: 'user'}]};
-		get.postForJsonResponse(JSON.stringify(channel), spikeRunner.showPostTest);
+		var channel = {ChannelName: spikeRunner.getSelectedFromDropDown('channels'), Subscribers:[{ UserName: spikeRunner.getSelectedFromDropDown('users')}]};
+		get.postForJsonResponse(JSON.stringify(channel), spikeRunner.updateChannelList);
 	});
 	
 	$('#getChannels').click(function(){
 		var get = new getData('http://127.0.0.1:8080/api/channels');
-		get.getForJsonResponse(spikeRunner.showPostTest);
+		get.getForJsonResponse(spikeRunner.updateChannelList);
 	});
 
 	$('#getSpecificChannel').click(function(){
 	console.log(document.getElementById('channelName').value);
 		if(document.getElementById('channelName')){
 			var get = new getData('http://127.0.0.1:8080/api/channels/' + document.getElementById('channelName').value);
-			get.getForJsonResponse(spikeRunner.showPostTest);
+			get.getForJsonResponse(spikeRunner.updateChannelList);
+		}
+	});
+
+	$('#createUser').click(function(){
+		if(document.getElementById('userName')){
+			var get = new getData('http://127.0.0.1:8080/api/chatuser');
+			var user = {UserName: document.getElementById('userName').value};
+			get.postForJsonResponse(JSON.stringify(user), spikeRunner.updateUserList);
 		}
 	});
 	
@@ -90,7 +132,12 @@ $(document).ready(function(){
 	<input id="channelName" type="text" />
 	<input type="button" id="getSpecificChannel" value="get specific channel" />
 </form>
-
+<form method="post" action="">
+	<input id="userName" type="text" />
+	<input type="button" id="createUser" value="create user" />
+</form>
 <div id="results"> 
 
 </div>
+<select id="users"></select>
+<select id="channels"> </select>

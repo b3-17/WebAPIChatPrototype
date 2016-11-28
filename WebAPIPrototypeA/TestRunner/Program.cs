@@ -13,7 +13,7 @@ namespace TestRunner
 			ChatUserControllerTests tests = new ChatUserControllerTests();
 			tests.SetUp();
 
-			tests.SaveChatUserUnique();
+			tests.GetChatUserByName();
 
 			tests.CleanUp();
 		}

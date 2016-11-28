@@ -65,5 +65,36 @@ namespace WebAPIPrototypeA.Tests
 			Assert.AreEqual(this.fakeApplicationSettings.TokenBase, this.sessionContext.ChatUsers.FirstOrDefault().UserToken, "the chatuser token was incorrect");
 			Assert.AreEqual(HttpStatusCode.NotModified, result.StatusCode, "the result was incorrect");
 		}
+
+		[Test()]
+		public void GetAllAvailableChatUsers()
+		{
+			this.sessionContext.ChatUsers = base.GetFakeChatUsers(this.fakeApplicationSettings);
+			OkNegotiatedContentResult<IEnumerable<ChatUser>> chatUsers = this.chatUserController.GetAllChatUsers() as OkNegotiatedContentResult<IEnumerable<ChatUser>>;
+
+			Assert.AreEqual(this.sessionContext.ChatUsers.Count(), chatUsers.Content.Count(), "the returned chat users were not correct");
+		}
+
+		[Test()]
+		public void GetChatUserByName()
+		{
+			this.sessionContext.ChatUsers = base.GetFakeChatUsers(this.fakeApplicationSettings);
+
+			OkNegotiatedContentResult<IEnumerable<ChatUser>> chatUsers = this.chatUserController.GetChatUser("test user 1") as OkNegotiatedContentResult<IEnumerable<ChatUser>>;
+
+			Assert.AreEqual(1, chatUsers.Content.Count(), "only one chat user should be returned by the query");
+			Assert.AreEqual("test user 1", chatUsers.Content.FirstOrDefault().UserName, "the chat users were not returned properly");
+		}
+
+		[Test()]
+		public void GetChannelByNameDoesntExist()
+		{
+			this.sessionContext.ChatUsers = base.GetFakeChatUsers(this.fakeApplicationSettings);
+			Assert.AreEqual(0, this.sessionContext.ChatUsers.Count(x => x.UserName == "non-existing user"), "make sure test is properly primed");
+
+			OkNegotiatedContentResult<IEnumerable<ChatUser>> chatUsers = this.chatUserController.GetChatUser("non-existing channel") as OkNegotiatedContentResult<IEnumerable<ChatUser>>;
+			Assert.AreEqual(0, chatUsers.Content.Count(), "no channels should be returned by the query");
+		}
+
 	}
 }
