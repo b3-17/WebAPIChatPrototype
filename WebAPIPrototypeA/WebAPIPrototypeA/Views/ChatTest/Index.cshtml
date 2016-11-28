@@ -52,6 +52,12 @@ $(document).ready(function(){
 		get.postForJsonResponse(JSON.stringify(channel), spikeRunner.showPostTest);
 	});
 
+	$('#unsubscribe').click(function(){
+		var get = new getData('http://127.0.0.1:8080/api/channels/unsubscribe');
+		var channel = {ChannelName: 'hello', Subscribers:[{ UserName: 'user'}]};
+		get.postForJsonResponse(JSON.stringify(channel), spikeRunner.showPostTest);
+	});
+	
 	$('#getChannels').click(function(){
 		var get = new getData('http://127.0.0.1:8080/api/channels');
 		get.getForJsonResponse(spikeRunner.showPostTest);
@@ -73,6 +79,9 @@ $(document).ready(function(){
 </form>
 <form method="post" action="">
 	<input type="button" id="subscribe" value="subscribe" />
+</form>
+<form method="post" action="">
+	<input type="button" id="unsubscribe" value="unsubscribe" />
 </form>
 <form method="get" action="">
 	<input type="button" id="getChannels" value="get channels" />

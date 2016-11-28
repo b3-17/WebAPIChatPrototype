@@ -84,6 +84,8 @@ namespace WebAPIPrototypeA.Controllers
 			var channels = channelRepo.All();
 			if (channels.Count(x => x.ChannelName == subscriber.ChannelName) > 0)
 			{
+				// this hits through the IEnumerable reference directly to update the underlying context. If we were to switch to a db we would need to call a save changes
+				// with an update method
 				Channel channelToUnsubscribeFrom = channels.FirstOrDefault(x => x.ChannelName == subscriber.ChannelName);
 				channelToUnsubscribeFrom.Subscribers = channelToUnsubscribeFrom.Subscribers
 					.Where(x => subscriber.Subscribers.Any(y => y.UserName != x.UserName)).ToList();

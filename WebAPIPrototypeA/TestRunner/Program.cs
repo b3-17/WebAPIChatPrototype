@@ -8,11 +8,11 @@ namespace TestRunner
 		public static void Main(string[] args)
 		{
 			//ChannelRepositoryTests tests = new ChannelRepositoryTests();
-			//ChannelsTests tests = new ChannelsTests();
-			ChatUserRepositoryTests tests = new ChatUserRepositoryTests();
+			ChannelsTests tests = new ChannelsTests();
+			//ChatUserRepositoryTests tests = new ChatUserRepositoryTests();
 			tests.SetUp();
 
-			tests.SaveUser();
+			tests.UnsubscribeUserFromExistentChannel();
 
 			tests.CleanUp();
 		}

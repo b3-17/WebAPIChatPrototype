@@ -80,6 +80,7 @@
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.5.28\lib\net45\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WebAPIPrototypeA\WebAPIPrototypeA.csproj">
@@ -102,6 +103,8 @@
     <Compile Include="Controllers\ControllerTestBase.cs" />
     <Compile Include="Repository\RepositoryTestBase.cs" />
     <Compile Include="Repository\ChatUserRepositoryTests.cs" />
+    <Compile Include="Mocks\FakeApplicationSettings.cs" />
+    <Compile Include="Controllers\ChatUserControllerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
