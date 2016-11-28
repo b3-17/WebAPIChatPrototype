@@ -2,27 +2,37 @@
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Results;
+using System.Web.SessionState;
+using Repository;
+using Models;
 
 namespace WebAPIPrototypeA.Controllers
 {
 	public class ChannelsController : ApiController
 	{
-		public List<Channel> Channels { get; set; }
-		public ChannelsController()
+		private IRepository<Channel> channelRepo { get; set; }
+
+		public ChannelsController(IRepository<Channel> passedChannelData)
 		{
-			this.Channels = new List<Channel>();
+			this.channelRepo = passedChannelData;
+		}
+
+		public ChannelsController()
+			:this(new ChannelRepository(new SessionStateContext()))
+		{
+
 		}
 
 		[HttpGet]
 		public IHttpActionResult GetAllChannels()
 		{
-			return Ok(this.Channels);
+			return Ok(this.channelRepo.All());
 		}
 
 		[HttpGet]
 		public IHttpActionResult GetChannel(string channelName)
 		{
-			return Ok(this.Channels.Where(x => x.ChannelName == channelName));
+			return Ok(this.channelRepo.All().Where(x => x.ChannelName == channelName));
 		}
 
 		[HttpPost]
@@ -30,7 +40,7 @@ namespace WebAPIPrototypeA.Controllers
 		{
 			if (this.IsValidChannelToCreate(channel))
 			{
-				this.Channels.Add(channel);
+				this.channelRepo.Save(channel);
 				return Ok();
 			}
 			else
@@ -41,7 +51,7 @@ namespace WebAPIPrototypeA.Controllers
 		{
 			bool isValidNewChannel = false;
 			if (channel.Subscribers != null)
-				isValidNewChannel = this.Channels.Count(x => x.ChannelName == channel.ChannelName) == 0 && channel.Subscribers.Count() > 0;
+				isValidNewChannel = this.channelRepo.All().Count(x => x.ChannelName == channel.ChannelName) == 0 && channel.Subscribers.Count() > 0;
 
 			return isValidNewChannel;
 		}
@@ -51,11 +61,11 @@ namespace WebAPIPrototypeA.Controllers
 		{
 			if (this.IsValidChannelToCreate(subscriber))
 			{
-				this.Channels.Add(subscriber);
+				this.channelRepo.Save(subscriber);
 				return Ok();
 			}
 
-			Channel channelToSubscribeTo = this.Channels.FirstOrDefault(x => x.ChannelName == subscriber.ChannelName);
+			Channel channelToSubscribeTo = this.channelRepo.All().FirstOrDefault(x => x.ChannelName == subscriber.ChannelName);
 			if (channelToSubscribeTo.Subscribers == null)
 				channelToSubscribeTo.Subscribers = new List<ChatUser>();
 
@@ -71,9 +81,10 @@ namespace WebAPIPrototypeA.Controllers
 		[HttpPost]
 		public IHttpActionResult Unsubscribe([FromBody]Channel subscriber)
 		{
-			if (this.Channels.Count(x => x.ChannelName == subscriber.ChannelName) > 0)
+			var channels = channelRepo.All();
+			if (channels.Count(x => x.ChannelName == subscriber.ChannelName) > 0)
 			{
-				Channel channelToUnsubscribeFrom = this.Channels.FirstOrDefault(x => x.ChannelName == subscriber.ChannelName);
+				Channel channelToUnsubscribeFrom = channels.FirstOrDefault(x => x.ChannelName == subscriber.ChannelName);
 				channelToUnsubscribeFrom.Subscribers = channelToUnsubscribeFrom.Subscribers
 					.Where(x => subscriber.Subscribers.Any(y => y.UserName != x.UserName)).ToList();
 			}

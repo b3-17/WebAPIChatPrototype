@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WebAPIPrototypeA
+namespace Models
 {
 	public class Channel
 	{

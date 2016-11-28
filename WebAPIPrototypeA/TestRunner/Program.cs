@@ -7,10 +7,11 @@ namespace TestRunner
 	{
 		public static void Main(string[] args)
 		{
+			//ChannelRepositoryTests tests = new ChannelRepositoryTests();
 			ChannelsTests tests = new ChannelsTests();
 			tests.SetUp();
 
-			tests.UnsubscribeUserNotSubscribedFromExistentChannel();
+			tests.CreateChannelAlreadyExists();
 
 			tests.CleanUp();
 		}

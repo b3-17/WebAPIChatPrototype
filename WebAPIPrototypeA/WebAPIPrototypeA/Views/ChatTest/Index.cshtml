@@ -34,25 +34,54 @@ getData.prototype.postForJsonResponse = function (data, callback) {
 	
 	; spikeRunner = {
 		showPostTest: function(data){
-			console.log(data);
+			document.getElementById('results').innerHTML = JSON.stringify(data);
 			
 		},
 }
 
 $(document).ready(function(){
+	$('#newChannel').click(function(){
+		var get = new getData('http://127.0.0.1:8080/api/createchannel');
+		var channel = {ChannelName: document.getElementById('newChannelName').value, Subscribers:[{ UserName: 'user'}]};
+		get.postForJsonResponse(JSON.stringify(channel), spikeRunner.showPostTest);
+	});
 	
-	$('#buttony').click(function(){
-		var get = new getData('/api/channels/subscribe');
+	$('#subscribe').click(function(){
+		var get = new getData('http://127.0.0.1:8080/api/channels/subscribe');
 		var channel = {ChannelName: 'hello', Subscribers:[{ UserName: 'user'}]};
 		get.postForJsonResponse(JSON.stringify(channel), spikeRunner.showPostTest);
-		//var get = new getData('http://127.0.0.1:8080/api/channels/test');
-		//get.getForJsonResponse(spikeRunner.showPostTest);
+	});
+
+	$('#getChannels').click(function(){
+		var get = new getData('http://127.0.0.1:8080/api/channels');
+		get.getForJsonResponse(spikeRunner.showPostTest);
+	});
+
+	$('#getSpecificChannel').click(function(){
+	console.log(document.getElementById('channelName').value);
+		if(document.getElementById('channelName')){
+			var get = new getData('http://127.0.0.1:8080/api/channels/' + document.getElementById('channelName').value);
+			get.getForJsonResponse(spikeRunner.showPostTest);
+		}
 	});
 	
 });
 </script>
-
-<form method="post" action="/api/products">
-	<input type="button" id="buttony" value="hi" />
+<form method="post" action="">
+	<input id="newChannelName" type="text" value="channel name" />
+	<input type="button" id="newChannel" value="createNewChannel" />
+</form>
+<form method="post" action="">
+	<input type="button" id="subscribe" value="subscribe" />
+</form>
+<form method="get" action="">
+	<input type="button" id="getChannels" value="get channels" />
+</form>
+<form method="post" action="">
+	<input id="channelName" type="text" />
+	<input type="button" id="getSpecificChannel" value="get specific channel" />
 </form>
 
+<div id="results"> 
+
+</div>
