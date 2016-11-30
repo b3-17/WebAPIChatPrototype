@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "Chat";
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.1.js"></script>
+<script src="http://127.0.0.1:8081/signalr/hubs"></script>
+<h2>Chat</h2>
+<div class="container">
+    <input type="text" id="message" />
+    <input type="button" id="sendmessage" value="Send" />
+    <input type="hidden" id="displayname" />
+    <ul id="discussion"></ul>
+</div>
+<script type="text/javascript">
+	$(function () {
+	$.connection.hub.url = "http://localhost:8081/signalr";
+            // Reference the auto-generated proxy for the hub.
+		 var chat = $.connection.chatHub;
+	chat.client.addNewMessageToPage = function (name, message) {
+                // Add the message to the page.
+                console.log('doing the thing');
+            };
+   $.connection.hub.start().done(function(){
+	console.log(chat);
+		$('#sendMessage').click(function () {
+                    // Call the Send method on the hub.
+                    chat.server.send(spikeRunner.getSelectedFromDropDown('users'), $('#messageToSend').val());
+                    // Clear text box and reset focus for next comment.
+                    $('#messageToSend').val('').focus();
+                });
+	});
+	});
+</script>

@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Results;
-using System.Web.SessionState;
 using Repository;
 using Models;
 
@@ -18,7 +16,7 @@ namespace WebAPIPrototypeA.Controllers
 		}
 
 		public ChatUserController()
-			:this(new ChatUserRepository(new SessionStateContext(), new ApplicationSettings()))
+			:this(new ChatUserRepository(new SessionStateContext()))
 		{
 
 		}

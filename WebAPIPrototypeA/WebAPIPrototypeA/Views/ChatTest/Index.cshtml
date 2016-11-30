@@ -1,126 +1,10 @@
-﻿<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script type="text/javascript" >
- var targetUrl;
-
-function getData(url) {
-    targetUrl = url;
-};
-
-getData.prototype.getForJsonResponse = function (callback) {
-    var request = new XMLHttpRequest();
-    request.open("GET", targetUrl, true);
-    request.onreadystatechange = function () {
-        if (request.readyState != 4 || request.status != 200)
-            return;
-        callback(request.responseText);
-    };
-    request.send();
-}
-
-getData.prototype.postForJsonResponse = function (data, callback) {
-    var request = new XMLHttpRequest();
-    request.open("POST", targetUrl, true);
-    request.setRequestHeader("Accept", "application/json");
-    request.setRequestHeader("Content-type", "application/json");
-    request.setRequestHeader("Content-length", data.length);
-    request.setRequestHeader("Connection", "close");
-    request.onreadystatechange = function () {
-        if (request.readyState != 4 || request.status != 200)
-            return;
-        callback(request.responseText);
-    };
-    request.send(data);
-}
-	
-	; spikeRunner = {
-		updateChannelList: function(){
-		var get = new getData('http://127.0.0.1:8080/api/channels');
-		get.getForJsonResponse(setChannelDropdown);
-			function setChannelDropdown(data){	
-	console.log(data);
-			var parsedData = JSON.parse(data);
-			var select = document.getElementById('channels');
-			for( var i = 0; i < parsedData.length; i++){
-				var option = document.createElement('option');
-				option.value = parsedData[i].ChannelName;
-				option.innerHTML = parsedData[i].ChannelName;
-				select.appendChild(option);
-			}
-			}
-		},
-	
-	getSelectedFromDropDown: function(listId){
-		var dropdown = document.getElementById(listId);
-		return dropdown[dropdown.selectedIndex].innerHTML;
-	},
-
-	updateUserList :function(){
-		var get = new getData('http://127.0.0.1:8080/api/chatuser');
-		get.getForJsonResponse(setUserDropdown);
-		function setUserDropdown(data){
-			var parsedData = JSON.parse(data);
-	console.log(data);
-			var select = document.getElementById('users');
-			for( var i = 0; i < parsedData.length; i++){
-				var option = document.createElement('option');
-				option.value = parsedData[i].UserToken;
-				option.innerHTML = parsedData[i].UserName;
-				select.appendChild(option);
-			}
-		}
-	}
-}
-
-$(document).ready(function(){
-	spikeRunner.updateChannelList();
-	spikeRunner.updateUserList();
-	$('#newChannel').click(function(){
-		var get = new getData('http://127.0.0.1:8080/api/createchannel');
-		var channel = {ChannelName: document.getElementById('newChannelName').value, Subscribers:[{ UserName: spikeRunner.getSelectedFromDropDown('users') }]};
-		get.postForJsonResponse(JSON.stringify(channel), spikeRunner.updateChannelList);
-	});
-	
-	$('#subscribe').click(function(){
-		var get = new getData('http://127.0.0.1:8080/api/channels/subscribe');
-		var channel = {ChannelName: spikeRunner.getSelectedFromDropDown('channels'), Subscribers:[{ UserName: spikeRunner.getSelectedFromDropDown('users')}]};
-		get.postForJsonResponse(JSON.stringify(channel), spikeRunner.updateChannelList);
-	});
-
-	$('#unsubscribe').click(function(){
-		var get = new getData('http://127.0.0.1:8080/api/channels/unsubscribe');
-		var channel = {ChannelName: spikeRunner.getSelectedFromDropDown('channels'), Subscribers:[{ UserName: spikeRunner.getSelectedFromDropDown('users')}]};
-		get.postForJsonResponse(JSON.stringify(channel), spikeRunner.updateChannelList);
-	});
-	
-	$('#getChannels').click(function(){
-		var get = new getData('http://127.0.0.1:8080/api/channels');
-		get.getForJsonResponse(spikeRunner.updateChannelList);
-	});
-
-	$('#getSpecificChannel').click(function(){
-	console.log(document.getElementById('channelName').value);
-		if(document.getElementById('channelName')){
-			var get = new getData('http://127.0.0.1:8080/api/channels/' + document.getElementById('channelName').value);
-			get.getForJsonResponse(spikeRunner.updateChannelList);
-		}
-	});
-
-	$('#createUser').click(function(){
-		if(document.getElementById('userName')){
-			var get = new getData('http://127.0.0.1:8080/api/chatuser');
-			var user = {UserName: document.getElementById('userName').value};
-			get.postForJsonResponse(JSON.stringify(user), spikeRunner.updateUserList);
-		}
-	});
-	
-});
-</script>
+﻿
+<!--Html will not load if the html is not laid out before loading the scripts -->
+<input type="hidden" id="userConnectionToken" />
+<input type="hidden" id="myName" />
 <form method="post" action="">
 	<input id="newChannelName" type="text" value="channel name" />
 	<input type="button" id="newChannel" value="createNewChannel" />
-</form>
-<form method="post" action="">
-	<input type="button" id="subscribe" value="subscribe" />
 </form>
 <form method="post" action="">
 	<input type="button" id="unsubscribe" value="unsubscribe" />
@@ -139,5 +23,36 @@ $(document).ready(function(){
 <div id="results"> 
 
 </div>
-<select id="users"></select>
+<select id="channelsToJoin"> </select>
+<input type="button" id="subscribe" value="Subscribe" /><br/>
 <select id="channels"> </select>
+<input id="messageToSendToChannel" type="text" />
+<input type="button" id="sendMessageToChannel" value="Send Message to channel" /><br/>
+<br/>
+
+<select id="users"></select>
+<input id="messageToSendToUser" type="text" />
+<input type="button" id="sendMessageToUser" value="Send Message to user directly" /><br/>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.1.js"></script>
+<script src="http://127.0.0.1:8081/signalr/hubs"></script>
+<script src="/Scripts/getData.js" ></script>
+<script src="/Scripts/spikeRunner.js" ></script>
+<script src="/Scripts/chat.js" ></script>
+<script src="/Scripts/apiCalls.js" ></script>
+
+<script>
+$(function () {
+	chat.startUpChat();
+});
+ $(document).ready(function () {
+	spikeRunner.updateChannelLists();
+	spikeRunner.updateUserList();
+	initApiEvents.init();
+});
+
+</script>
+<div id="chatResults">
+	
+</div>

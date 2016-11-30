@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Results;
-using System.Web.SessionState;
 using Repository;
 using Models;
 
@@ -20,7 +19,7 @@ namespace WebAPIPrototypeA.Controllers
 		public ChannelsController()
 			:this(new ChannelRepository(new SessionStateContext()))
 		{
-
+			
 		}
 
 		[HttpGet]

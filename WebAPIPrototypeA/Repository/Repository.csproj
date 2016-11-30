@@ -30,8 +30,6 @@
     <Compile Include="SessionStateContext.cs" />
     <Compile Include="IContext.cs" />
     <Compile Include="ChatUserRepository.cs" />
-    <Compile Include="IApplicationSettings.cs" />
-    <Compile Include="ApplicationSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Models\Models.csproj">
