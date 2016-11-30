@@ -6,23 +6,19 @@
 	<input id="newChannelName" type="text" value="channel name" />
 	<input type="button" id="newChannel" value="createNewChannel" />
 </form>
-<form method="post" action="">
-	<input type="button" id="unsubscribe" value="unsubscribe" />
-</form>
 <form method="get" action="">
 	<input type="button" id="getChannels" value="get channels" />
 </form>
-<form method="post" action="">
-	<input id="channelName" type="text" />
-	<input type="button" id="getSpecificChannel" value="get specific channel" />
-</form>
+<div id="channelListDetails">
+	
+</div>
 <form method="post" action="">
 	<input id="userName" type="text" />
 	<input type="button" id="createUser" value="create user" />
 </form>
-<div id="results"> 
 
-</div>
+<select id="channelsToLeave"> </select>
+<input type="button" id="unsubscribe" value="Unsubscribe" /><br/>
 <select id="channelsToJoin"> </select>
 <input type="button" id="subscribe" value="Subscribe" /><br/>
 <select id="channels"> </select>

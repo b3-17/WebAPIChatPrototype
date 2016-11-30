@@ -153,5 +153,71 @@ namespace WebAPIPrototypeA.Tests
 
 			hub.CreateUser(testUser);
 		}
+
+		[Test()]
+		public void SubscribeUser()
+		{
+			string contextId = "1";
+			string testChannel = "testChannel";
+			string testUser = "test from";
+			string testMessage = String.Format("{0} joined {1}", testUser, testChannel);
+			dynamic sub = new ExpandoObject();
+
+			sub.sendChannelJoiningMessage = new Action<string, string>((user, message) =>
+		   {
+			   this.isSent = true;
+			   Assert.AreEqual(testUser, user, "the user was not supplied correctly");
+			   Assert.AreEqual(testMessage, message, "the user was not supplied correctly");
+		   });
+
+			IRequest request = base.BuildTestRequest().Object;
+			var mockClients = new Mock<IHubCallerConnectionContext<dynamic>>();
+			mockClients.Setup(m => m.Group(testChannel)).Returns((ExpandoObject)sub);
+			mockGroupManager.Setup(m => m.Add(contextId, testChannel)).Callback(() => this.isSent = true);
+
+			var mockHubCallerContext = new Mock<HubCallerContext>(request, "1");
+
+			ChatHub hub = new ChatHub()
+			{
+				Context = mockHubCallerContext.Object,
+				Clients = mockClients.Object,
+				Groups = mockGroupManager.Object
+			};
+
+			hub.JoinChatChannel(testChannel, contextId, testUser);
+		}
+
+		[Test()]
+		public void UnsubscribeUser()
+		{
+			string contextId = "1";
+			string testChannel = "testChannel";
+			string testUser = "test from";
+			string testMessage = String.Format("{0} left {1}", testUser, testChannel);
+			dynamic unsub = new ExpandoObject();
+
+			unsub.sendChannelLeavingMessage = new Action<string, string>((user, message) =>
+		   {
+			   this.isSent = true;
+			   Assert.AreEqual(testUser, user, "the user was not supplied correctly");
+				Assert.AreEqual(testMessage, message, "the user was not supplied correctly");
+		   });
+
+			IRequest request = base.BuildTestRequest().Object;
+			var mockClients = new Mock<IHubCallerConnectionContext<dynamic>>();
+			mockClients.Setup(m => m.Group(testChannel)).Returns((ExpandoObject)unsub);
+			mockGroupManager.Setup(m => m.Remove(contextId, testChannel)).Callback(() => this.isSent = true);
+
+			var mockHubCallerContext = new Mock<HubCallerContext>(request, "1");
+
+			ChatHub hub = new ChatHub()
+			{
+				Context = mockHubCallerContext.Object,
+				Clients = mockClients.Object,
+				Groups = mockGroupManager.Object
+			};
+
+			hub.LeaveChatChannel(testChannel, contextId, testUser);
+		}
 	}
 }

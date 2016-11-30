@@ -112,7 +112,6 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\respond.js" />
-    <Content Include="Views\ChatTest\Index2.cshtml" />
     <Content Include="Scripts\apiCalls.js" />
     <Content Include="Scripts\getData.js" />
     <Content Include="Scripts\spikeRunner.js" />

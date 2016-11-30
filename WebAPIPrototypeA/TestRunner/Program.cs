@@ -15,7 +15,7 @@ namespace TestRunner
 
 			tests.SetUp();
 
-			tests.CreateChatRoom();
+			tests.SubscribeUser();
 
 			tests.CleanUp();
 		}

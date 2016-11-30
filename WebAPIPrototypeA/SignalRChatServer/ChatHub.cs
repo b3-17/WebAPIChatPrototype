@@ -26,6 +26,13 @@ namespace SignalRChatServer
 			Clients.Group(channel).sendChannelJoiningMessage(userJoiningName, message);
 		}
 
+		public void LeaveChatChannel(string channel, string userJoiningId, string userJoiningName)
+		{
+			Groups.Remove(userJoiningId, channel);
+			string message = String.Format("{0} left {1}", userJoiningName, channel);
+			Clients.Group(channel).sendChannelLeavingMessage(userJoiningName, message);
+		}
+
 		public void ChannelBroadCast(string channel, string fromUserName, string message)
 		{
 		 	Clients.Group(channel).sendChannelMessage(fromUserName, message);
