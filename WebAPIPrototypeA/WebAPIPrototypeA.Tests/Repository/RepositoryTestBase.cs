@@ -14,11 +14,11 @@ namespace WebAPIPrototypeA.Tests
 			HttpContext.Current = StaticHttpMock.FakeHttpContext(url);
 		}
 
-		protected List<ChatUser> GetFakeChatUsers(IApplicationSettings fakeApplicationSettings)
+		protected List<ChatUser> GetFakeChatUsers()
 		{
 			List<ChatUser> fakeChatUsers = new List<ChatUser>();
-			fakeChatUsers.Add(new ChatUser { UserName = "test user", UserToken = fakeApplicationSettings.TokenBase });
-			fakeChatUsers.Add(new ChatUser { UserName = "test user 1", UserToken = fakeApplicationSettings.TokenBase + 1 });
+			fakeChatUsers.Add(new ChatUser { UserName = "test user", UserToken = "12345" });
+			fakeChatUsers.Add(new ChatUser { UserName = "test user 1", UserToken = "54321" });
 
 			return fakeChatUsers;
 		}

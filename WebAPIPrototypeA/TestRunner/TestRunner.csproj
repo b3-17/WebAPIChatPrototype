@@ -42,6 +42,10 @@
       <Project>{323EB8A3-9192-4373-813A-D5CB61F85F79}</Project>
       <Name>WebAPIPrototypeA</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SignalRChatServer\SignalRChatServer.csproj">
+      <Project>{7D0CDBFB-DA25-4093-AB04-CC82321C0298}</Project>
+      <Name>SignalRChatServer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

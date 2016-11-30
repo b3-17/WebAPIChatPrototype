@@ -81,6 +81,25 @@
       <HintPath>..\packages\Moq.4.5.28\lib\net45\Moq.dll</HintPath>
     </Reference>
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Security" />
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.2.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.1\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.1\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WebAPIPrototypeA\WebAPIPrototypeA.csproj">
@@ -95,6 +114,10 @@
       <Project>{E8D08EB8-9E29-499B-BC8C-1C0B85E826CC}</Project>
       <Name>Models</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SignalRChatServer\SignalRChatServer.csproj">
+      <Project>{7D0CDBFB-DA25-4093-AB04-CC82321C0298}</Project>
+      <Name>SignalRChatServer</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\ChannelsTests.cs" />
@@ -103,8 +126,9 @@
     <Compile Include="Controllers\ControllerTestBase.cs" />
     <Compile Include="Repository\RepositoryTestBase.cs" />
     <Compile Include="Repository\ChatUserRepositoryTests.cs" />
-    <Compile Include="Mocks\FakeApplicationSettings.cs" />
     <Compile Include="Controllers\ChatUserControllerTests.cs" />
+    <Compile Include="SignalRChatServer\ChatHubTests.cs" />
+    <Compile Include="SignalRChatServer\SignalRServerTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -112,6 +136,7 @@
   <ItemGroup>
     <Folder Include="Mocks\" />
     <Folder Include="Repository\" />
+    <Folder Include="SignalRChatServer\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
