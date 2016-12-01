@@ -10,6 +10,7 @@ using Models;
 using Repository;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web.Http.Results;
 
 namespace WebAPIPrototypeA.Tests
 {
@@ -80,9 +81,33 @@ namespace WebAPIPrototypeA.Tests
 		}
 
 		[Test]
-		public void SearchChatMessages()
-		{ 
+		public void SearchDirectChatMessages()
+		{
+			HttpContext.Current.Session["ChatMessages"] = this.GetFakeChatMessages();
+			int directMessagesCount = this.GetFakeChatMessages().OfType<DirectMessage>().Count(x => x.Originator.UserToken == "09876" || x.To.UserToken == "09876");
+			OkNegotiatedContentResult<List<ChatMessage>> results = this.chatMessageController.GetChatMessages("09876", string.Empty) as OkNegotiatedContentResult<List<ChatMessage>>;
+
+			Assert.AreEqual(directMessagesCount, results.Content.OfType<DirectMessage>().Count(), "the wrong results were returned");
+			Assert.AreEqual(results.Content.OfType<ChannelMessage>().Count(), 0, "the wrong results were returned");
+		}
+
+		[Test]
+		public void SearchChannelChatMessages()
+		{
+			List<ChatMessage> fakeMessages = this.GetFakeChatMessages();
+			fakeMessages.Add(new ChannelMessage
+			{
+				Channel = new Channel
+				{ ChannelName = "test channel 2" },
+				Message = "test message",
+				Originator = new ChatUser { UserName = "test user", UserToken = "42938" } });
 			
+			HttpContext.Current.Session["ChatMessages"] = fakeMessages;
+			OkNegotiatedContentResult<List<ChatMessage>> results = this.chatMessageController.GetChatMessages(string.Empty, "test channel 2") as OkNegotiatedContentResult<List<ChatMessage>>;
+
+			Assert.AreEqual(fakeMessages.OfType<ChannelMessage>().Count(x => x.Channel.ChannelName == "test channel 2"), 
+			                results.Content.OfType<ChannelMessage>().Count(), "the wrong results were returned");
+			Assert.AreEqual(results.Content.OfType<DirectMessage>().Count(), 0, "the wrong results were returned");
 		}
 	}
 }

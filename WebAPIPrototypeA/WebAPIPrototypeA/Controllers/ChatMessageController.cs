@@ -46,5 +46,21 @@ namespace WebAPIPrototypeA.Controllers
 
 			return Ok();
 		}
+
+		[HttpGet]
+		public IHttpActionResult GetChatMessages(string userToken, string channel)
+		{
+			// Get a generator + pagination working on this item to deliver huge chunks of message data
+			IEnumerable<ChatMessage> allMessages = this.chatMessageRepo.All();
+
+			List<ChatMessage> results = new List<ChatMessage>();
+
+			if (!string.IsNullOrEmpty(userToken))
+				results.AddRange(allMessages.OfType<DirectMessage>().Where(x => x.Originator.UserToken == userToken || x.To.UserToken == userToken));
+			if(!string.IsNullOrEmpty(channel))
+				results.AddRange(allMessages.OfType<ChannelMessage>().Where(x => x.Channel.ChannelName == channel));
+
+			return Ok(results);
+		}
 	}
 }

@@ -16,7 +16,7 @@ namespace TestRunner
 
 			tests.SetUp();
 
-			tests.SaveChatMessage();
+			tests.SearchChannelChatMessages();
 
 			tests.CleanUp();
 		}
