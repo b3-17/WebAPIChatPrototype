@@ -27,6 +27,12 @@
   <ItemGroup>
     <Compile Include="Channel.cs" />
     <Compile Include="ChatUser.cs" />
+    <Compile Include="ChatMessage\ChatMessage.cs" />
+    <Compile Include="ChatMessage\ChannelMessage.cs" />
+    <Compile Include="ChatMessage\DirectMessage.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ChatMessage\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

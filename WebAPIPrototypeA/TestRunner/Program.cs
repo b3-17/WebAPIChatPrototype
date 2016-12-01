@@ -11,11 +11,12 @@ namespace TestRunner
 			//ChannelsTests tests = new ChannelsTests();
 			//ChatUserRepositoryTests tests = new ChatUserRepositoryTests();
 			//ChatUserControllerTests tests = new ChatUserControllerTests();
-			ChatHubTests tests = new ChatHubTests();
+			//ChatHubTests tests = new ChatHubTests();
+			ChatMessageControllerTests tests = new ChatMessageControllerTests();
 
 			tests.SetUp();
 
-			tests.SubscribeUser();
+			tests.SearchChannelChatMessages();
 
 			tests.CleanUp();
 		}
