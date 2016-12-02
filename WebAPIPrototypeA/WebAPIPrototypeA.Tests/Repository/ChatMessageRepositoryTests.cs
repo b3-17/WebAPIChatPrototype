@@ -16,8 +16,7 @@ namespace WebAPIPrototypeA.Tests
 		[SetUp]
 		public void SetUp()
 		{
-			base.SetUpFakeHttpSessionMock("/test");
-			fakeContext = new SessionStateContext();
+			fakeContext = new FakeContext();
 			this.chatMessageRepository = new ChatMessageRepository(this.fakeContext);
 		}
 
@@ -38,7 +37,7 @@ namespace WebAPIPrototypeA.Tests
 				Originator = new ChatUser { UserName = "test user", UserToken = "12345" } };
 			this.chatMessageRepository.Save(chatMessageToSave);
 
-			List<ChatMessage> channelMessages = HttpContext.Current.Session["ChatMessages"] as List<ChatMessage>;
+			List<ChatMessage> channelMessages = fakeContext.ChatMessages.ToList();
 
 			Assert.AreEqual(1, channelMessages.Count(), "the channel was not saved correctly");
 			Assert.AreEqual("test channel", (this.fakeContext.ChatMessages.FirstOrDefault() as ChannelMessage).Channel.ChannelName, "the channel name was incorrect");
@@ -58,7 +57,7 @@ namespace WebAPIPrototypeA.Tests
 			};
 			this.chatMessageRepository.Save(chatMessageToSave);
 
-			List<ChatMessage> directMessages = HttpContext.Current.Session["ChatMessages"] as List<ChatMessage>;
+			List<ChatMessage> directMessages = this.fakeContext.ChatMessages.ToList();
 
 			Assert.AreEqual(1, directMessages.Count(), "the channel was not saved correctly");
 			Assert.AreEqual("user to", (this.fakeContext.ChatMessages.FirstOrDefault() as DirectMessage).To.UserName, "the user to send to was incorrect");
@@ -88,7 +87,7 @@ namespace WebAPIPrototypeA.Tests
 			this.chatMessageRepository.Save(channelMessageToSave);
 			this.chatMessageRepository.Save(directMessageToSave);
 
-			List<ChatMessage> allMessages = HttpContext.Current.Session["ChatMessages"] as List<ChatMessage>;
+			List<ChatMessage> allMessages = this.fakeContext.ChatMessages.ToList();
 
 			Assert.AreEqual(2, allMessages.Count(), "the channel was not saved correctly");
 
@@ -107,7 +106,7 @@ namespace WebAPIPrototypeA.Tests
 		[Test()]
 		public void GetAllChannels()
 		{
-			HttpContext.Current.Session["ChatMessages"] = this.GetFakeChatMessages();
+			this.fakeContext.ChatMessages = this.GetFakeChatMessages();
 
 			var chatMessages = this.chatMessageRepository.All();
 

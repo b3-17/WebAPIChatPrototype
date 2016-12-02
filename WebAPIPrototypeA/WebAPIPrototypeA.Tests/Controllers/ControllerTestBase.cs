@@ -28,7 +28,7 @@ namespace WebAPIPrototypeA.Tests
 
 		protected void SetUpFakeHttpSessionMock(string url)
 		{
-			HttpContext.Current = StaticHttpMock.FakeHttpContext(url);
+			HttpContext.Current = StaticSessionHttpMock.FakeHttpContext(url);
 		}
 
 		protected List<ChatMessage> GetFakeChatMessages()

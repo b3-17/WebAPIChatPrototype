@@ -7,16 +7,16 @@ namespace TestRunner
 	{
 		public static void Main(string[] args)
 		{
-			//ChannelRepositoryTests tests = new ChannelRepositoryTests();
+			ChannelRepositoryTests tests = new ChannelRepositoryTests();
 			//ChannelsTests tests = new ChannelsTests();
 			//ChatUserRepositoryTests tests = new ChatUserRepositoryTests();
 			//ChatUserControllerTests tests = new ChatUserControllerTests();
 			//ChatHubTests tests = new ChatHubTests();
-			ChatMessageControllerTests tests = new ChatMessageControllerTests();
+			//ChatMessageControllerTests tests = new ChatMessageControllerTests();
 
 			tests.SetUp();
 
-			tests.SearchChannelChatMessages();
+			tests.SaveChannel();
 
 			tests.CleanUp();
 		}

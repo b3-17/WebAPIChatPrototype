@@ -32,7 +32,6 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Xml.Linq" />
@@ -100,6 +99,7 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.Abstractions" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WebAPIPrototypeA\WebAPIPrototypeA.csproj">
@@ -131,9 +131,11 @@
     <Compile Include="SignalRChatServer\SignalRServerTestBase.cs" />
     <Compile Include="Repository\ChatMessageRepositoryTests.cs" />
     <Compile Include="Controllers\ChatMessageControllerTests.cs" />
+    <Compile Include="Mocks\FakeContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Mocks\" />

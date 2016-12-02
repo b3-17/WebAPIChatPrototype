@@ -18,8 +18,7 @@ namespace WebAPIPrototypeA.Tests
 		[SetUp]
 		public void SetUp()
 		{
-			base.SetUpFakeHttpSessionMock("/test");
-			fakeContext = new SessionStateContext();
+			fakeContext = new FakeContext();
 			this.userRepository = new ChatUserRepository(this.fakeContext);
 		}
 
@@ -36,31 +35,17 @@ namespace WebAPIPrototypeA.Tests
 			ChatUser userToSave = new ChatUser { UserName = "test user", UserToken = "12345" };
 			this.userRepository.Save(userToSave);
 
-			List<ChatUser> users = HttpContext.Current.Session["ChatUsers"] as List<ChatUser>;
+			List<ChatUser> users = this.fakeContext.ChatUsers.ToList();
 
 			Assert.AreEqual(1, users.Count(), "the user was not saved correctly");
 			Assert.AreEqual("test user", users.FirstOrDefault().UserName, "the user name was incorrect");
 			Assert.AreEqual("12345", users.FirstOrDefault().UserToken, "the user token was incorrect");
 		}
 
-		[Test]
-		public void SaveUserIncrementUserToken()
-		{
-			HttpContext.Current.Session["ChatUsers"] = base.GetFakeChatUsers();
-			ChatUser userToSave = new ChatUser { UserName = "test user 3", UserToken = "7890" };
-			this.userRepository.Save(userToSave);
-
-			List<ChatUser> users = HttpContext.Current.Session["ChatUsers"] as List<ChatUser>;
-
-			Assert.AreEqual(3, users.Count(), "the user was not saved correctly");
-			Assert.AreEqual("test user 3", users.LastOrDefault().UserName, "the user name was incorrect");
-			Assert.AreEqual("7890", users.LastOrDefault().UserToken, "the user token was incorrect");
-		}
-
 		[Test()]
 		public void GetAllChatUsers()
 		{
-			HttpContext.Current.Session["ChatUsers"] = base.GetFakeChatUsers();
+			this.fakeContext.ChatUsers = base.GetFakeChatUsers();
 
 			var users = this.userRepository.All();
 
@@ -69,7 +54,5 @@ namespace WebAPIPrototypeA.Tests
 			Assert.AreEqual(base.GetFakeChatUsers().LastOrDefault().UserName, users.LastOrDefault().UserName, "the channel name was incorrect");
 			Assert.AreEqual(base.GetFakeChatUsers().LastOrDefault().UserToken, users.LastOrDefault().UserToken, "the user was incorrect");
 		}
-
-
 	}
 }
