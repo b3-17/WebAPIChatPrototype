@@ -1,9 +1,6 @@
 ﻿using System.Web;
-using System.Configuration;
 using Models;
-using Repository;
 using System.Collections.Generic;
-using Moq;
 
 namespace WebAPIPrototypeA.Tests
 {
@@ -11,7 +8,7 @@ namespace WebAPIPrototypeA.Tests
 	{
 		protected void SetUpFakeHttpSessionMock(string url)
 		{
-			HttpContext.Current = StaticHttpMock.FakeHttpContext(url);
+			StaticCacheHttpMock.SetBasicHttpMock();
 		}
 
 		protected List<ChatUser> GetFakeChatUsers()

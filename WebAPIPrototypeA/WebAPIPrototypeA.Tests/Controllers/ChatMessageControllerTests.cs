@@ -23,10 +23,10 @@ namespace WebAPIPrototypeA.Tests
 		[SetUp]
 		public void SetUp()
 		{
-			this.sessionContext = new SessionStateContext();
+			this.sessionContext = new FakeContext();
 			this.chatMessageRepository = new ChatMessageRepository(this.sessionContext);
 			this.chatMessageController = new ChatMessageController(this.chatMessageRepository);
-			HttpContext.Current = StaticHttpMock.FakeHttpContext("/test");
+			HttpContext.Current = StaticSessionHttpMock.FakeHttpContext("/test");
 		}
 
 		[TearDown]
@@ -83,7 +83,7 @@ namespace WebAPIPrototypeA.Tests
 		[Test]
 		public void SearchDirectChatMessages()
 		{
-			HttpContext.Current.Session["ChatMessages"] = this.GetFakeChatMessages();
+			this.sessionContext.ChatMessages = this.GetFakeChatMessages();
 			int directMessagesCount = this.GetFakeChatMessages().OfType<DirectMessage>().Count(x => x.Originator.UserToken == "09876" || x.To.UserToken == "09876");
 			OkNegotiatedContentResult<List<ChatMessage>> results = this.chatMessageController.GetChatMessages("09876", string.Empty) as OkNegotiatedContentResult<List<ChatMessage>>;
 
@@ -102,7 +102,7 @@ namespace WebAPIPrototypeA.Tests
 				Message = "test message",
 				Originator = new ChatUser { UserName = "test user", UserToken = "42938" } });
 			
-			HttpContext.Current.Session["ChatMessages"] = fakeMessages;
+			this.sessionContext.ChatMessages = fakeMessages;
 			OkNegotiatedContentResult<List<ChatMessage>> results = this.chatMessageController.GetChatMessages(string.Empty, "test channel 2") as OkNegotiatedContentResult<List<ChatMessage>>;
 
 			Assert.AreEqual(fakeMessages.OfType<ChannelMessage>().Count(x => x.Channel.ChannelName == "test channel 2"), 

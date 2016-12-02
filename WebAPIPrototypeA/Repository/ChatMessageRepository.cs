@@ -24,6 +24,7 @@ namespace Repository
 
 		public IEnumerable<ChatMessage> All()
 		{
+			
 			return this.context.ChatMessages;
 		}
 	}

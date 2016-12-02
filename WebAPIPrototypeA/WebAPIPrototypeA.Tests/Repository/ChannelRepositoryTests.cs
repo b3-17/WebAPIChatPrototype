@@ -16,8 +16,7 @@ namespace WebAPIPrototypeA.Tests
 		[SetUp]
 		public void SetUp()
 		{
-			base.SetUpFakeHttpSessionMock("/test");
-			fakeContext = new SessionStateContext();
+			fakeContext = new FakeContext();
 			this.channelRepository = new ChannelRepository(this.fakeContext);
 		}
 
@@ -25,6 +24,7 @@ namespace WebAPIPrototypeA.Tests
 		public void CleanUp()
 		{
 			this.channelRepository = null;
+			this.fakeContext = null;
 		}
 
 		[Test()]
@@ -33,7 +33,7 @@ namespace WebAPIPrototypeA.Tests
 			Channel channelToSave = new Channel { ChannelName = "test channel", Subscribers = new List<ChatUser> { new ChatUser { UserName = "test user" } } };
 			this.channelRepository.Save(channelToSave);
 
-			List<Channel> channels = HttpContext.Current.Session["Channels"] as List<Channel>;
+			List<Channel> channels = this.fakeContext.Channels.ToList();
 
 			Assert.AreEqual(1, channels.Count(), "the channel was not saved correctly");
 			Assert.AreEqual(1, channels.FirstOrDefault().Subscribers.Count(), "the subscriber list was not saved correctly");
@@ -44,11 +44,11 @@ namespace WebAPIPrototypeA.Tests
 		[Test()]
 		public void SaveMultipleChannelsDontLoseOriginal()
 		{
-			HttpContext.Current.Session["Channels"] = this.GetFakeChannels();
+			this.fakeContext.Channels = this.GetFakeChannels();
 			Channel channelToSave = new Channel { ChannelName = "test channel 3", Subscribers = new List<ChatUser> { new ChatUser { UserName = "test user 3" } } };
 			this.channelRepository.Save(channelToSave);
 
-			List<Channel> channels = HttpContext.Current.Session["Channels"] as List<Channel>;
+			List<Channel> channels = this.fakeContext.Channels.ToList();
 
 			Assert.AreEqual(3, channels.Count(), "the channel was not saved correctly - not validating dupes here, so the details are irrelevant");
 			Assert.AreEqual(1, channels.FirstOrDefault().Subscribers.Count(), "the subscriber list was not saved correctly");
@@ -59,7 +59,7 @@ namespace WebAPIPrototypeA.Tests
 		[Test()]
 		public void GetAllChannels()
 		{
-			HttpContext.Current.Session["Channels"] = this.GetFakeChannels();
+			this.fakeContext.Channels = this.GetFakeChannels();
 
 			var channels = this.channelRepository.All();
 

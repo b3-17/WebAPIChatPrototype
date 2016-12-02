@@ -3,6 +3,7 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using Repository;
 using Models;
+using System.Collections.Generic;
 
 namespace WebAPIPrototypeA.Controllers
 {
@@ -16,7 +17,7 @@ namespace WebAPIPrototypeA.Controllers
 		}
 
 		public ChatUserController()
-			:this(new ChatUserRepository(new SessionStateContext()))
+			:this(new ChatUserRepository(new HttpCacheContext()))
 		{
 
 		}

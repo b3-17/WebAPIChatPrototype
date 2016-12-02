@@ -27,7 +27,7 @@
   <ItemGroup>
     <Compile Include="IRepository.cs" />
     <Compile Include="ChannelRepository.cs" />
-    <Compile Include="SessionStateContext.cs" />
+    <Compile Include="HttpCacheContext.cs" />
     <Compile Include="IContext.cs" />
     <Compile Include="ChatUserRepository.cs" />
     <Compile Include="ChatMessageRepository.cs" />

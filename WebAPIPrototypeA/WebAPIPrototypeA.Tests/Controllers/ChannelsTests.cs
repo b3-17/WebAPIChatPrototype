@@ -21,16 +21,16 @@ namespace WebAPIPrototypeA.Tests
 		[SetUp]
 		public void SetUp()
 		{
-			this.sessionContext  = new SessionStateContext();
+			this.sessionContext  = new FakeContext();
 			this.channelRepository = new ChannelRepository(this.sessionContext);
 			this.channelController = new ChannelsController(this.channelRepository);
-			HttpContext.Current = StaticHttpMock.FakeHttpContext("/test");
 		}
 
 		[TearDown]
 		public void CleanUp()
 		{
 			this.channelController = null;
+			this.sessionContext = null;
 		}
 
 		[Test()]

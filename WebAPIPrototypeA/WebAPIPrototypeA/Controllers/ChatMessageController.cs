@@ -20,7 +20,7 @@ namespace WebAPIPrototypeA.Controllers
 		}
 
 		public ChatMessageController()
-			: this(new ChatMessageRepository(new SessionStateContext()))
+			: this(new ChatMessageRepository(new HttpCacheContext()))
 		{
 
 		}
@@ -51,6 +51,7 @@ namespace WebAPIPrototypeA.Controllers
 		public IHttpActionResult GetChatMessages(string userToken, string channel)
 		{
 			// Get a generator + pagination working on this item to deliver huge chunks of message data
+			// use dynamic expression building to search on message parts, dates etc. 
 			IEnumerable<ChatMessage> allMessages = this.chatMessageRepo.All();
 
 			List<ChatMessage> results = new List<ChatMessage>();

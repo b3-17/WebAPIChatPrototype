@@ -29,6 +29,7 @@ namespace WebAPIPrototypeA.Tests
 			var applicationInstance = new Mock<HttpApplication>();
 			var applicationBase = new Mock<HttpApplicationStateBase>();
 
+
 			request.Setup(x => x.Cookies).Returns(cookies);
 			request.Setup(x => x.Files).Returns(files.Object);
 			response.Setup(x => x.Cookies).Returns(cookies);
@@ -69,14 +70,15 @@ namespace WebAPIPrototypeA.Tests
 		}
 	}
 
-	public static class StaticHttpMock
-	{ 
+	public static class StaticSessionHttpMock
+	{
 		public static HttpContext FakeHttpContext(string url)
 		{
 			var uri = new Uri(url);
 			var httpRequest = new HttpRequest(string.Empty, uri.ToString(), uri.Query.TrimStart('?'));
 			var stringWriter = new StringWriter();
 			var httpResponse = new HttpResponse(stringWriter);
+
 			var httpContext = new HttpContext(httpRequest, httpResponse);
 
 			var sessionContainer = new HttpSessionStateContainer("id",
@@ -89,6 +91,16 @@ namespace WebAPIPrototypeA.Tests
 
 			return httpContext;
 		}
+	}
 
+	public static class StaticCacheHttpMock
+	{
+		public static void SetBasicHttpMock()
+		{
+			HttpContext.Current = new HttpContext(
+
+		   new HttpRequest(null, "http://tempuri.org", null),
+		   new HttpResponse(null));
+		}
 	}
 }
