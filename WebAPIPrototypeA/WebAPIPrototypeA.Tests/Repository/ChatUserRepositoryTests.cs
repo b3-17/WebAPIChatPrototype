@@ -18,8 +18,7 @@ namespace WebAPIPrototypeA.Tests
 		[WebApiTestInitialise]
 		public void SetUp()
 		{
-			base.SetUpFakeHttpSessionMock("/test");
-			fakeContext = new SessionStateContext();
+			fakeContext = new FakeContext();
 			this.userRepository = new ChatUserRepository(this.fakeContext);
 		}
 
@@ -36,7 +35,7 @@ namespace WebAPIPrototypeA.Tests
 			ChatUser userToSave = new ChatUser { UserName = "test user", UserToken = "12345" };
 			this.userRepository.Save(userToSave);
 
-			List<ChatUser> users = HttpContext.Current.Session["ChatUsers"] as List<ChatUser>;
+			List<ChatUser> users = this.fakeContext.ChatUsers.ToList();
 
 			Assert.AreEqual(1, users.Count(), "the user was not saved correctly");
 			Assert.AreEqual("test user", users.FirstOrDefault().UserName, "the user name was incorrect");
@@ -60,7 +59,7 @@ namespace WebAPIPrototypeA.Tests
 		[WebApiTest]
 		public void GetAllChatUsers()
 		{
-			HttpContext.Current.Session["ChatUsers"] = base.GetFakeChatUsers();
+			this.fakeContext.ChatUsers = base.GetFakeChatUsers();
 
 			var users = this.userRepository.All();
 
@@ -69,7 +68,5 @@ namespace WebAPIPrototypeA.Tests
 			Assert.AreEqual(base.GetFakeChatUsers().LastOrDefault().UserName, users.LastOrDefault().UserName, "the channel name was incorrect");
 			Assert.AreEqual(base.GetFakeChatUsers().LastOrDefault().UserToken, users.LastOrDefault().UserToken, "the user was incorrect");
 		}
-
-
 	}
 }

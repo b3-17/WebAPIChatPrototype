@@ -21,10 +21,10 @@ namespace WebAPIPrototypeA.Tests
 		[WebApiTestInitialise]
 		public void SetUp()
 		{
-			this.sessionContext  = new SessionStateContext();
+			this.sessionContext  = new FakeContext();
 			this.chatUserRepository = new ChatUserRepository(this.sessionContext);
 			this.chatUserController = new ChatUserController(this.chatUserRepository);
-			HttpContext.Current = StaticHttpMock.FakeHttpContext("/test");
+			HttpContext.Current = StaticSessionHttpMock.FakeHttpContext("/test");
 		}
 
 		[WebApiTestCleanUp]
@@ -52,7 +52,7 @@ namespace WebAPIPrototypeA.Tests
 		[WebApiTest]
 		public void SaveChatUserUnique()
 		{
-			HttpContext.Current.Session["ChatUsers"] = base.GetFakeChatUsers();
+			this.sessionContext.ChatUsers = base.GetFakeChatUsers();
 			ChatUser user = new ChatUser { UserName = base.GetFakeChatUsers().LastOrDefault().UserName, UserToken = "9876" };
 			Assert.AreEqual(base.GetFakeChatUsers().Count(), this.sessionContext.ChatUsers.Count(), "the chat user list should be empty on start up");
 

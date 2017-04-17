@@ -15,32 +15,32 @@ namespace WebAPIPrototypeA
 				name: "Subscribe",
 				routeTemplate: "api/Channels/Subscribe",
 				defaults: new { controller = "Channels", action = "Subscribe" }
-			).RouteHandler = new SessionStateRouteHandler();
+			).RouteHandler = new CacheStateRouteHandler();
 
 			RouteTable.Routes.MapHttpRoute(
 				name: "Unsubscribe",
 				routeTemplate: "api/Channels/Unsubscribe",
 				defaults: new { controller = "Channels", action = "Unsubscribe" }
-			).RouteHandler = new SessionStateRouteHandler();
+			).RouteHandler = new CacheStateRouteHandler();
 
 			RouteTable.Routes.MapHttpRoute(
 				name: "CreateChannel",
 				routeTemplate: "api/CreateChannel/{channelName}",
 				defaults: new { controller = "Channels", action = "Save", channelName = RouteParameter.Optional, method = "POST" }
-			).RouteHandler = new SessionStateRouteHandler();
+			).RouteHandler = new CacheStateRouteHandler();
 
 			RouteTable.Routes.MapHttpRoute(
 				name: "CreateChatUser",
 				routeTemplate: "api/ChatUser/{chatUserName}",
 				defaults: new { controller = "ChatUser", action = "Save", channelName = RouteParameter.Optional, method = "POST" }
-			).RouteHandler = new SessionStateRouteHandler();
+			).RouteHandler = new CacheStateRouteHandler();
 
 
 			RouteTable.Routes.MapHttpRoute(
 				name: "DefaultChannel",
 				routeTemplate: "api/{controller}/{channelName}",
 				defaults: new { channelName = RouteParameter.Optional }
-			).RouteHandler = new SessionStateRouteHandler();
+			).RouteHandler = new CacheStateRouteHandler();
 		}
 	}
 }

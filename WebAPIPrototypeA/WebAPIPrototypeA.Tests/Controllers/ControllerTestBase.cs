@@ -1,7 +1,8 @@
 ﻿using System.Web;
 using System.Collections.Generic;
 using Models;
-using Repository;
+using Newtonsoft.Json;
+using System.Net.Http;
 
 namespace WebAPIPrototypeA.Tests
 {
@@ -27,7 +28,45 @@ namespace WebAPIPrototypeA.Tests
 
 		protected void SetUpFakeHttpSessionMock(string url)
 		{
-			HttpContext.Current = StaticHttpMock.FakeHttpContext(url);
+			HttpContext.Current = StaticSessionHttpMock.FakeHttpContext(url);
+		}
+
+		protected List<ChatMessage> GetFakeChatMessages()
+		{
+			List<ChatMessage> fakeChatMessages = new List<ChatMessage>();
+			fakeChatMessages.Add(new ChannelMessage
+			{
+				Channel = new Channel { ChannelName = "test channel 1" },
+				Message = "channel message 1",
+				Originator = new ChatUser { UserName = "from user 1", UserToken = "12345" }
+			});
+
+			fakeChatMessages.Add(new DirectMessage
+			{
+				Originator = new ChatUser { UserName = "from user 1", UserToken = "12345" },
+				Message = "direct message 1",
+				To = new ChatUser { UserName = "to user 2", UserToken = "09876" }
+			});
+
+			fakeChatMessages.Add(new DirectMessage
+			{
+				Originator = new ChatUser { UserName = "from user 2", UserToken = "09876" },
+				Message = "direct message 2",
+				To = new ChatUser { UserName = "to user 1", UserToken = "12345" }
+			});
+
+			return fakeChatMessages;
+		}
+
+		protected HttpRequestMessage BuildFakeJsonRequestMessage(object toJsonSerialise)
+		{ 
+			string jsonMessage = JsonConvert.SerializeObject(toJsonSerialise);
+			var request = new HttpRequestMessage();
+			var content = new StringContent(jsonMessage);
+
+			request.Content = content;
+
+			return request;
 		}
 	}
 }

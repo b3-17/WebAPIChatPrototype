@@ -6,26 +6,18 @@ using System.Web.SessionState;
 
 namespace WebAPIPrototypeA
 {
-	public class SessionableControllerHandler : HttpControllerHandler, IRequiresSessionState
+	public class CacheControllerHandler : HttpControllerHandler, IRequiresSessionState
 	{
-		public SessionableControllerHandler(RouteData routeData)
+		public CacheControllerHandler(RouteData routeData)
 			: base(routeData)
 		{ }
 	}
 
-	public class SessionStateRouteHandler : IRouteHandler
+	public class CacheStateRouteHandler : IRouteHandler
 	{
 		IHttpHandler IRouteHandler.GetHttpHandler(RequestContext requestContext)
 		{
-			return new SessionableControllerHandler(requestContext.RouteData);
-		}
-	}
-
-	public class testGuy
-	{
-		public void SaveStuff(string thing)
-		{
-			HttpContext.Current.Session["I"] = thing;
+			return new CacheControllerHandler(requestContext.RouteData);
 		}
 	}
 }

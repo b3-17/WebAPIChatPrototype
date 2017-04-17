@@ -17,7 +17,7 @@ namespace WebAPIPrototypeA.Controllers
 		}
 
 		public ChannelsController()
-			:this(new ChannelRepository(new SessionStateContext()))
+			:this(new ChannelRepository(new HttpCacheContext()))
 		{
 			
 		}
