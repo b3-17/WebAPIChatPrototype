@@ -7,13 +7,13 @@ using Models;
 
 namespace WebAPIPrototypeA.Tests
 {
-	[TestFixture()]
+	[WebApiTestClass]
 	public class ChannelRepositoryTests : RepositoryTestBase
 	{
 		private IRepository<Channel> channelRepository { get; set; }
 		private IContext fakeContext { get; set; }
 
-		[SetUp]
+		[WebApiTestInitialise]
 		public void SetUp()
 		{
 			base.SetUpFakeHttpSessionMock("/test");
@@ -21,13 +21,13 @@ namespace WebAPIPrototypeA.Tests
 			this.channelRepository = new ChannelRepository(this.fakeContext);
 		}
 
-		[TearDown]
+		[WebApiTestCleanUp]
 		public void CleanUp()
 		{
 			this.channelRepository = null;
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void SaveChannel()
 		{
 			Channel channelToSave = new Channel { ChannelName = "test channel", Subscribers = new List<ChatUser> { new ChatUser { UserName = "test user" } } };
@@ -41,7 +41,7 @@ namespace WebAPIPrototypeA.Tests
 			Assert.AreEqual("test user", channels.FirstOrDefault().Subscribers.FirstOrDefault().UserName, "the user was incorrect");
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void SaveMultipleChannelsDontLoseOriginal()
 		{
 			HttpContext.Current.Session["Channels"] = this.GetFakeChannels();
@@ -56,7 +56,7 @@ namespace WebAPIPrototypeA.Tests
 			Assert.AreEqual("test user 3", channels.LastOrDefault().Subscribers.FirstOrDefault().UserName, "the user was incorrect");
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void GetAllChannels()
 		{
 			HttpContext.Current.Session["Channels"] = this.GetFakeChannels();

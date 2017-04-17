@@ -129,6 +129,7 @@
     <Compile Include="Controllers\ChatUserControllerTests.cs" />
     <Compile Include="SignalRChatServer\ChatHubTests.cs" />
     <Compile Include="SignalRChatServer\SignalRServerTestBase.cs" />
+    <Compile Include="WebApiTestAttributes.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

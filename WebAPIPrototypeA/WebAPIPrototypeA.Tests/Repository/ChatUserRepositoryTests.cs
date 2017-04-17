@@ -8,14 +8,14 @@ using Models;
 
 namespace WebAPIPrototypeA.Tests
 {
-	[TestFixture()]
+	[WebApiTestClass]
 	public class ChatUserRepositoryTests : RepositoryTestBase
 	{
 		private IRepository<ChatUser> userRepository { get; set; }
 		private IContext fakeContext { get; set; }
 		private string tokenBaseKey { get { return "TokenBase"; } }
 
-		[SetUp]
+		[WebApiTestInitialise]
 		public void SetUp()
 		{
 			base.SetUpFakeHttpSessionMock("/test");
@@ -23,14 +23,14 @@ namespace WebAPIPrototypeA.Tests
 			this.userRepository = new ChatUserRepository(this.fakeContext);
 		}
 
-		[TearDown]
+		[WebApiTestCleanUp]
 		public void CleanUp()
 		{
 			this.userRepository = null;
 			this.fakeContext = null;
 		}
 
-		[Test]
+		[WebApiTest]
 		public void SaveUser()
 		{
 			ChatUser userToSave = new ChatUser { UserName = "test user", UserToken = "12345" };
@@ -43,7 +43,7 @@ namespace WebAPIPrototypeA.Tests
 			Assert.AreEqual("12345", users.FirstOrDefault().UserToken, "the user token was incorrect");
 		}
 
-		[Test]
+		[WebApiTest]
 		public void SaveUserIncrementUserToken()
 		{
 			HttpContext.Current.Session["ChatUsers"] = base.GetFakeChatUsers();
@@ -57,7 +57,7 @@ namespace WebAPIPrototypeA.Tests
 			Assert.AreEqual("7890", users.LastOrDefault().UserToken, "the user token was incorrect");
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void GetAllChatUsers()
 		{
 			HttpContext.Current.Session["ChatUsers"] = base.GetFakeChatUsers();

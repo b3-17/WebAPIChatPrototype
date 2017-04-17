@@ -8,14 +8,14 @@ using System;
 
 namespace WebAPIPrototypeA.Tests
 {
-	[TestFixture()]
+	[WebApiTestClass]
 	public class ChatHubTests : SignalRServerTestBase
 	{
 		private Mock<IConnection> mockConnection { get; set; }
 		private Mock<IGroupManager> mockGroupManager { get; set; }
 		private bool isSent { get; set; }
 
-		[SetUp]
+		[WebApiTestInitialise]
 		public void SetUp()
 		{
 			this.mockConnection = new Mock<IConnection>();
@@ -23,7 +23,7 @@ namespace WebAPIPrototypeA.Tests
 			this.isSent = false;
 		}
 
-		[TearDown]
+		[WebApiTestCleanUp]
 		public void CleanUp()
 		{
 			base.ClearTestRequest();
@@ -31,7 +31,7 @@ namespace WebAPIPrototypeA.Tests
 			this.mockGroupManager = null;
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void CreateChatRoom()
 		{
 			string testChannelName = "testChannel";
@@ -63,7 +63,7 @@ namespace WebAPIPrototypeA.Tests
 			hub.CreateChatChannel(testChannelName, testUserName);
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void BroadcastMessageToChannel()
 		{
 			string testChannel = "testChannel";
@@ -94,7 +94,7 @@ namespace WebAPIPrototypeA.Tests
 			hub.ChannelBroadCast(testChannel, testUser, testMessage);
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void DirectMessageUser()
 		{
 			string testMessage = "testMessage";
@@ -125,7 +125,7 @@ namespace WebAPIPrototypeA.Tests
 			hub.DirectMessageUser(testUserId, testFrom, testMessage);
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void CreateUser()
 		{
 			string testUser = "test from";
@@ -154,7 +154,7 @@ namespace WebAPIPrototypeA.Tests
 			hub.CreateUser(testUser);
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void SubscribeUser()
 		{
 			string contextId = "1";
@@ -187,7 +187,7 @@ namespace WebAPIPrototypeA.Tests
 			hub.JoinChatChannel(testChannel, contextId, testUser);
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void UnsubscribeUser()
 		{
 			string contextId = "1";
