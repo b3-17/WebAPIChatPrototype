@@ -8,17 +8,23 @@ using System.Web.Http.Results;
 using System.Web;
 using Models;
 using Repository;
+using System.Reflection;
 
 namespace WebAPIPrototypeA.Tests
 {
-	[TestFixture()]
+	[WebApiTestClass]
 	public class ChannelsTests : ControllerTestBase
 	{
 		private ChannelsController channelController { get; set; }
 		private IRepository<Channel> channelRepository { get; set; }
 		private IContext sessionContext { get; set; }
 
-		[SetUp]
+		public void RunTests()
+		{
+			
+		}
+
+		[WebApiTestInitialise]
 		public void SetUp()
 		{
 			this.sessionContext  = new FakeContext();
@@ -26,14 +32,14 @@ namespace WebAPIPrototypeA.Tests
 			this.channelController = new ChannelsController(this.channelRepository);
 		}
 
-		[TearDown]
+		[WebApiTestCleanUp]
 		public void CleanUp()
 		{
 			this.channelController = null;
 			this.sessionContext = null;
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void SaveChannel()
 		{
 			Channel channel = new Channel { ChannelName = "test channel", Subscribers = new List<ChatUser> { new ChatUser { UserName = "new user" } } };
@@ -46,7 +52,7 @@ namespace WebAPIPrototypeA.Tests
 			Assert.AreEqual(typeof(System.Web.Http.Results.OkResult), result.GetType(), "the result was incorrect");
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void SaveChannelNoInitialSubscriber()
 		{
 			Channel channel = new Channel { ChannelName = "test channel", Subscribers = null };
@@ -63,7 +69,7 @@ namespace WebAPIPrototypeA.Tests
 			Assert.AreEqual(HttpStatusCode.NotModified, result.StatusCode, "the result status code was incorrect");
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void CreateChannelAlreadyExists()
 		{
 			Channel existingChannel = new Channel { ChannelName = "existing test channel" };
@@ -76,7 +82,7 @@ namespace WebAPIPrototypeA.Tests
 			Assert.AreEqual(HttpStatusCode.NotModified, result.StatusCode, "the result was incorrect");
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void GetAllAvailableChannels()
 		{
 			this.sessionContext.Channels = this.GetFakeChannels();
@@ -85,7 +91,7 @@ namespace WebAPIPrototypeA.Tests
 			Assert.AreEqual(this.sessionContext.Channels.Count(), channels.Content.Count(), "the returned channels were not correct");
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void GetChannelByName()
 		{
 			this.sessionContext.Channels = this.GetFakeChannels();
@@ -96,7 +102,7 @@ namespace WebAPIPrototypeA.Tests
 			Assert.AreEqual("test channel 2", channels.Content.FirstOrDefault().ChannelName, "the channels were not returned properly");
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void GetChannelByNameDoesntExist()
 		{
 			this.sessionContext.Channels = this.GetFakeChannels();
@@ -106,7 +112,7 @@ namespace WebAPIPrototypeA.Tests
 			Assert.AreEqual(0, channels.Content.Count(), "no channels should be returned by the query");
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void SubscribeUserToExistentChannel()
 		{
 			this.sessionContext.Channels = this.GetFakeChannels();
@@ -119,7 +125,7 @@ namespace WebAPIPrototypeA.Tests
 			Assert.IsNotNull(result, "the response status was not correct");
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void SubscribeUserToExistentChannelAlreadySubscribed()
 		{
 			this.sessionContext.Channels = this.GetFakeChannels();
@@ -131,7 +137,7 @@ namespace WebAPIPrototypeA.Tests
 			Assert.IsNotNull(result, "the response status was not correct");
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void SubscribeUserToNonExistentChannel()
 		{
 			Assert.AreEqual(0, this.sessionContext.Channels.Count(), "make sure we have no channels currently");
@@ -142,7 +148,7 @@ namespace WebAPIPrototypeA.Tests
 			Assert.IsNotNull(result, "the response status was not correct");
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void UnsubscribeUserFromExistentChannel()
 		{
 			this.sessionContext.Channels = this.GetFakeChannels();
@@ -159,7 +165,7 @@ namespace WebAPIPrototypeA.Tests
 			Assert.IsNotNull(result, "the response status was not correct");
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void UnsubscribeUserFromNonExistentChannel()
 		{
 			Assert.AreEqual(0, this.sessionContext.Channels.Count(), "make sure we have no channels currently");
@@ -170,7 +176,7 @@ namespace WebAPIPrototypeA.Tests
 			Assert.IsNotNull(result, "the response status was not correct");
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void UnsubscribeUserNotSubscribedFromExistentChannel()
 		{
 			this.sessionContext.Channels = this.GetFakeChannels();

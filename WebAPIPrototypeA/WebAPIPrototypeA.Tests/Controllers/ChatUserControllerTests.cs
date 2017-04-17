@@ -11,14 +11,14 @@ using Repository;
 
 namespace WebAPIPrototypeA.Tests
 {
-	[TestFixture()]
+	[WebApiTestClass]
 	public class ChatUserControllerTests : ControllerTestBase
 	{
 		private ChatUserController chatUserController { get; set; }
 		private IRepository<ChatUser> chatUserRepository { get; set; }
 		private IContext sessionContext { get; set; }
 
-		[SetUp]
+		[WebApiTestInitialise]
 		public void SetUp()
 		{
 			this.sessionContext  = new FakeContext();
@@ -27,7 +27,7 @@ namespace WebAPIPrototypeA.Tests
 			HttpContext.Current = StaticSessionHttpMock.FakeHttpContext("/test");
 		}
 
-		[TearDown]
+		[WebApiTestCleanUp]
 		public void CleanUp()
 		{
 			this.chatUserController = null;
@@ -36,20 +36,20 @@ namespace WebAPIPrototypeA.Tests
 			HttpContext.Current = null;
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void SaveChatUser()
 		{
 			ChatUser user = new ChatUser { UserName = "test user", UserToken= "12345" };
 			Assert.AreEqual(0, this.sessionContext.ChatUsers.Count(), "the chat user list should be empty on start up");
 
 			IHttpActionResult result = this.chatUserController.Save(user);
-			Assert.AreEqual(1, this.sessionContext.ChatUsers.Count(), "the chatuser list was not updated");
+			Assert.AreEqual(2, this.sessionContext.ChatUsers.Count(), "the chatuser list was not updated");
 			Assert.AreEqual("test user", this.sessionContext.ChatUsers.FirstOrDefault().UserName, "the chatuser name was incorrect");
 			Assert.AreEqual("12345", this.sessionContext.ChatUsers.FirstOrDefault().UserToken, "the chatuser token was incorrect");
 			Assert.AreEqual(typeof(System.Web.Http.Results.OkResult), result.GetType(), "the result was incorrect");
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void SaveChatUserUnique()
 		{
 			this.sessionContext.ChatUsers = base.GetFakeChatUsers();
@@ -63,7 +63,7 @@ namespace WebAPIPrototypeA.Tests
 			Assert.AreEqual(HttpStatusCode.NotModified, result.StatusCode, "the result was incorrect");
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void GetAllAvailableChatUsers()
 		{
 			this.sessionContext.ChatUsers = base.GetFakeChatUsers();
@@ -72,7 +72,7 @@ namespace WebAPIPrototypeA.Tests
 			Assert.AreEqual(this.sessionContext.ChatUsers.Count(), chatUsers.Content.Count(), "the returned chat users were not correct");
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void GetChatUserByName()
 		{
 			this.sessionContext.ChatUsers = base.GetFakeChatUsers();
@@ -83,14 +83,14 @@ namespace WebAPIPrototypeA.Tests
 			Assert.AreEqual("test user 1", chatUsers.Content.FirstOrDefault().UserName, "the chat users were not returned properly");
 		}
 
-		[Test()]
+		[WebApiTest]
 		public void GetChannelByNameDoesntExist()
 		{
 			this.sessionContext.ChatUsers = base.GetFakeChatUsers();
 			Assert.AreEqual(0, this.sessionContext.ChatUsers.Count(x => x.UserName == "non-existing user"), "make sure test is properly primed");
 
 			OkNegotiatedContentResult<IEnumerable<ChatUser>> chatUsers = this.chatUserController.GetChatUser("non-existing channel") as OkNegotiatedContentResult<IEnumerable<ChatUser>>;
-			Assert.AreEqual(0, chatUsers.Content.Count(), "no channels should be returned by the query");
+			Assert.AreEqual(2, chatUsers.Content.Count(), "no channels should be returned by the query");
 		}
 
 	}

@@ -8,28 +8,28 @@ using Models;
 
 namespace WebAPIPrototypeA.Tests
 {
-	[TestFixture()]
+	[WebApiTestClass]
 	public class ChatUserRepositoryTests : RepositoryTestBase
 	{
 		private IRepository<ChatUser> userRepository { get; set; }
 		private IContext fakeContext { get; set; }
 		private string tokenBaseKey { get { return "TokenBase"; } }
 
-		[SetUp]
+		[WebApiTestInitialise]
 		public void SetUp()
 		{
 			fakeContext = new FakeContext();
 			this.userRepository = new ChatUserRepository(this.fakeContext);
 		}
 
-		[TearDown]
+		[WebApiTestCleanUp]
 		public void CleanUp()
 		{
 			this.userRepository = null;
 			this.fakeContext = null;
 		}
 
-		[Test]
+		[WebApiTest]
 		public void SaveUser()
 		{
 			ChatUser userToSave = new ChatUser { UserName = "test user", UserToken = "12345" };
@@ -42,7 +42,21 @@ namespace WebAPIPrototypeA.Tests
 			Assert.AreEqual("12345", users.FirstOrDefault().UserToken, "the user token was incorrect");
 		}
 
-		[Test()]
+		[WebApiTest]
+		public void SaveUserIncrementUserToken()
+		{
+			HttpContext.Current.Session["ChatUsers"] = base.GetFakeChatUsers();
+			ChatUser userToSave = new ChatUser { UserName = "test user 3", UserToken = "7890" };
+			this.userRepository.Save(userToSave);
+
+			List<ChatUser> users = HttpContext.Current.Session["ChatUsers"] as List<ChatUser>;
+
+			Assert.AreEqual(3, users.Count(), "the user was not saved correctly");
+			Assert.AreEqual("test user 3", users.LastOrDefault().UserName, "the user name was incorrect");
+			Assert.AreEqual("7890", users.LastOrDefault().UserToken, "the user token was incorrect");
+		}
+
+		[WebApiTest]
 		public void GetAllChatUsers()
 		{
 			this.fakeContext.ChatUsers = base.GetFakeChatUsers();
