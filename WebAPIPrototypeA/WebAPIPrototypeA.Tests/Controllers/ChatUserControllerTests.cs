@@ -43,7 +43,7 @@ namespace WebAPIPrototypeA.Tests
 			Assert.AreEqual(0, this.sessionContext.ChatUsers.Count(), "the chat user list should be empty on start up");
 
 			IHttpActionResult result = this.chatUserController.Save(user);
-			Assert.AreEqual(2, this.sessionContext.ChatUsers.Count(), "the chatuser list was not updated");
+			Assert.AreEqual(1, this.sessionContext.ChatUsers.Count(), "the chatuser list was not updated");
 			Assert.AreEqual("test user", this.sessionContext.ChatUsers.FirstOrDefault().UserName, "the chatuser name was incorrect");
 			Assert.AreEqual("12345", this.sessionContext.ChatUsers.FirstOrDefault().UserToken, "the chatuser token was incorrect");
 			Assert.AreEqual(typeof(System.Web.Http.Results.OkResult), result.GetType(), "the result was incorrect");
@@ -90,7 +90,7 @@ namespace WebAPIPrototypeA.Tests
 			Assert.AreEqual(0, this.sessionContext.ChatUsers.Count(x => x.UserName == "non-existing user"), "make sure test is properly primed");
 
 			OkNegotiatedContentResult<IEnumerable<ChatUser>> chatUsers = this.chatUserController.GetChatUser("non-existing channel") as OkNegotiatedContentResult<IEnumerable<ChatUser>>;
-			Assert.AreEqual(2, chatUsers.Content.Count(), "no channels should be returned by the query");
+			Assert.AreEqual(0, chatUsers.Content.Count(), "no channels should be returned by the query");
 		}
 
 	}
