@@ -97,6 +97,8 @@
     <Compile Include="Controllers\ChatTestController.cs" />
     <Compile Include="App_Code\SessionableControllerHandler.cs" />
     <Compile Include="Controllers\ChatUserController.cs" />
+    <Compile Include="Controllers\ChatMessageController.cs" />
+    <Compile Include="App_Code\ChatMessageConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Web.config" />
